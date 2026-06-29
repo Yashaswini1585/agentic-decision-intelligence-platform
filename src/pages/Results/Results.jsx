@@ -7,9 +7,6 @@ import {
   AlertTriangle, 
   ChevronRight,
   TrendingUp,
-  FileText,
-  User,
-  Heart,
   HelpCircle,
   ThumbsUp,
   ThumbsDown,
@@ -112,44 +109,6 @@ const Results = () => {
         {/* Left Columns (2/3) - Customer Details, Top 3 Recommendations, Narrative Explanation */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* Card 1: Customer Summary & Health Score */}
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle>Customer Health Profile</CardTitle>
-              <CardDescription>Accounts demographic metrics and current operational health.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                <div className="space-y-2 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-blue-600 shrink-0" />
-                    <h3 className="text-base font-extrabold text-slate-950 truncate">{customerData.name}</h3>
-                  </div>
-                  <div className="text-xs text-slate-500 space-y-1 font-medium">
-                    <p className="flex items-center gap-1.5"><User className="h-3.5 w-3.5 text-slate-400" /> Account Owner: {customerData.owner}</p>
-                    <p>Industry Segment: {customerData.industry}</p>
-                    <p className="text-blue-600 font-bold">{customerData.value}</p>
-                  </div>
-                </div>
-
-                {/* Health Score Gauge */}
-                <div className="flex items-center gap-4 shrink-0 bg-white border border-slate-200/80 p-4 rounded-xl shadow-xs">
-                  <div className="h-12 w-12 relative flex items-center justify-center">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="24" cy="24" r="20" className="stroke-slate-100 stroke-4 fill-none" />
-                      <circle cx="24" cy="24" r="20" className="stroke-emerald-500 stroke-4 fill-none" strokeDasharray="125" strokeDashoffset={125 - (125 * customerData.healthScore) / 100} />
-                    </svg>
-                    <Heart className="absolute h-5 w-5 text-emerald-500 fill-emerald-500/10" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-450 font-bold uppercase tracking-wider block">Health Score</span>
-                    <strong className="text-xl font-black text-slate-900 leading-none">{customerData.healthScore}<span className="text-xs text-slate-400 font-normal">/100</span></strong>
-                    <span className="text-[10px] text-emerald-600 font-bold block mt-0.5">Stable Operation</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Card 2: Top 3 Recommendations */}
           <Card>
