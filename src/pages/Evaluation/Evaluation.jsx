@@ -110,7 +110,7 @@ const Evaluation = () => {
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         
         {/* KPI 1: Recommendation Time */}
         <Card>
@@ -160,23 +160,6 @@ const Evaluation = () => {
           <div className="text-xs text-slate-550 mt-4 flex items-center gap-1">
             <span className="text-slate-650 font-semibold">8.0% overridden</span>
             <span>by administration</span>
-          </div>
-        </Card>
-
-        {/* KPI 4: Expected Business Impact */}
-        <Card>
-          <div className="flex justify-between items-start">
-            <div className="space-y-1">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider font-sans">Projected Business Impact</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">$343.8K</h3>
-            </div>
-            <div className="p-2.5 bg-slate-50 text-slate-600 rounded-lg">
-              <TrendingUp className="h-5 w-5" />
-            </div>
-          </div>
-          <div className="text-xs text-slate-550 mt-4 flex items-center gap-1">
-            <span className="text-emerald-600 font-bold">100% compliant</span>
-            <span>safety audit logs</span>
           </div>
         </Card>
       </div>
