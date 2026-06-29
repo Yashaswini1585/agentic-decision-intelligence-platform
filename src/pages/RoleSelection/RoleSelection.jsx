@@ -12,7 +12,6 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { usePlatform, ROLES } from '../../context/PlatformContext';
-import Card, { CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 
 const RoleIcon = ({ name, className }) => {
   switch (name) {
@@ -71,88 +70,83 @@ const RoleSelection = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-slate-50 flex flex-col justify-between p-6 md:p-12 text-slate-700">
-      {/* Top Bar */}
-      <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-600 rounded-xl text-white">
-            <BrainCircuit className="h-6 w-6" />
+    <div className="max-w-[1050px] mx-auto w-full px-4 py-2 flex flex-col justify-start items-center gap-4 box-border text-slate-700 text-center">
+      {/* Top logo & platform label */}
+      <div className="flex items-center gap-2 justify-center mb-1 w-full relative">
+        <div className="flex items-center gap-2 mx-auto">
+          <div className="p-1.5 bg-blue-600 rounded-lg text-white shrink-0">
+            <BrainCircuit className="h-4.5 w-4.5" />
           </div>
-          <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight leading-none">Agentic Decision Platform</h1>
-          </div>
+          <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50/70 border border-blue-100/50 px-2 py-0.5 rounded">
+            Identity Authorization Clearances
+          </span>
         </div>
-
         {user && (
-          <div className="flex items-center gap-2.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold">
-            <UserCheck className="h-4 w-4 text-emerald-500" />
-            <span>Active Session: <strong className="text-slate-900">{user.name}</strong></span>
+          <div className="absolute right-0 hidden sm:flex items-center gap-1.5 px-2 py-0.5 bg-white border border-slate-200 rounded-md text-[10px] font-semibold shrink-0">
+            <UserCheck className="h-3 w-3 text-emerald-500" />
+            <span>Active: <strong className="text-slate-900">{user.name}</strong></span>
           </div>
         )}
       </div>
 
-      {/* Middle Grid */}
-      <div className="max-w-5xl mx-auto w-full my-12 text-center">
-        <div className="space-y-3 mb-10">
-          <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-xs font-semibold">
-            Identity Authorization
-          </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Select Your Access Persona
-          </h2>
-          <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
-            Choose a dashboard role to customize the platform interfaces, security clearances, and command centers.
-          </p>
-        </div>
+      {/* Heading & Description */}
+      <div className="space-y-1.5 flex flex-col items-center">
+        <h2 className="text-[30px] sm:text-[34px] md:text-[38px] font-bold text-slate-900 tracking-tight leading-[1.1] max-w-[700px] text-center">
+          Select Your Access Persona
+        </h2>
+        <p className="text-[15px] sm:text-[16px] text-slate-500 font-light max-w-[650px] text-center leading-[1.4] mt-0.5">
+          Choose a dashboard role to customize the platform interfaces, security clearances, and command centers.
+        </p>
+      </div>
 
-        {/* Roles Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 text-left">
-          {Object.values(ROLES).map((role) => {
-            const style = colors[role.color] || colors.slate;
-            return (
-              <div 
-                key={role.id}
-                onClick={() => handleRoleSelect(role.id)}
-                className={`
-                  cursor-pointer bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs 
-                  transition-all duration-200 hover:-translate-y-1 hover:shadow-md
-                  flex flex-col justify-between gap-6 group relative overflow-hidden
-                  ${style.border}
-                `}
-              >
-                {/* Active hover overlay */}
-                <div className={`absolute top-0 left-0 w-1.5 h-full ${style.pill}`}></div>
+      {/* Roles Cards Centered Flex Group */}
+      <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 mt-2 w-full">
+        {Object.values(ROLES).map((role) => {
+          const style = colors[role.color] || colors.slate;
+          return (
+            <div 
+              key={role.id}
+              onClick={() => handleRoleSelect(role.id)}
+              className={`
+                cursor-pointer bg-white border border-slate-200/90 rounded-xl p-4 shadow-xs 
+                transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md
+                flex flex-col justify-between gap-6 group relative overflow-hidden h-full box-border
+                w-full md:w-[440px] h-[270px] shrink-0 text-left
+                ${style.border}
+              `}
+            >
+              {/* Active hover overlay */}
+              <div className={`absolute top-0 left-0 w-1.5 h-full ${style.pill}`}></div>
 
-                <div>
-                  <div className="flex justify-between items-start">
-                    <div className={`p-3 rounded-xl ${style.bg}`}>
-                      <RoleIcon name={role.icon} className="h-6 w-6" />
-                    </div>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">
-                      Clearance: {role.clearance || 'L2'}
-                    </span>
+              <div className="flex flex-col gap-2.5">
+                <div className="flex justify-between items-center">
+                  <div className={`p-2 rounded-lg ${style.bg}`}>
+                    <RoleIcon name={role.icon} className="h-5 w-5" />
                   </div>
-
-                  <h3 className="text-xl font-bold text-slate-950 mt-5 group-hover:text-blue-600 transition-colors">
-                    {role.name}
-                  </h3>
-                  <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-                    {role.description}
-                  </p>
+                  <span className="text-[12px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50 px-2 py-0.5 rounded border border-slate-100/50">
+                    Clearance: {role.clearance || 'L2'}
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 group-hover:text-blue-600 transition-colors pt-4 border-t border-slate-100">
-                  <span>Enter console</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </div>
+                <h3 className="text-[22px] md:text-[24px] font-bold text-slate-950 mt-1 group-hover:text-blue-600 transition-colors leading-tight">
+                  {role.name}
+                </h3>
+                <p className="text-[14.5px] text-slate-500 leading-normal line-clamp-2">
+                  {role.description}
+                </p>
               </div>
-            );
-          })}
-        </div>
+
+              <div className="flex items-center gap-1.5 text-[14px] md:text-[15px] font-semibold text-slate-500 group-hover:text-blue-600 transition-colors pt-2.5 border-t border-slate-100">
+                <span>Enter console</span>
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Footer */}
-      <div className="max-w-6xl mx-auto w-full text-center text-xs text-slate-400">
+      <div className="text-[10px] text-slate-400 mt-4 pt-2 border-t border-slate-100 w-full text-center">
         Agentic Decision Platform • Session expires in 8 hours • Secure Socket IP: 192.168.10.15
       </div>
     </div>
