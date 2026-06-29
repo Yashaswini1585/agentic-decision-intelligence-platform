@@ -20,6 +20,89 @@ The **Agentic Decision Intelligence Platform** is an AI-powered web application 
 - MongoDB Database Integration
 
 ---
+## Architecture
+
+```text
+                 User
+                   │
+                   ▼
+         Upload Business Input
+   (Meeting Notes / Customer Data)
+                   │
+                   ▼
+            Input Processing Agent
+                   │
+                   ▼
+              Planner Agent
+                   │
+        ┌──────────┼──────────┐
+        ▼          ▼          ▼
+   CRM Agent   Knowledge   Memory Agent
+                  Agent
+        └──────────┼──────────┘
+                   ▼
+      Business Analysis Agent
+                   │
+                   ▼
+      Recommendation Agent
+                   │
+                   ▼
+        Explanation Agent
+                   │
+                   ▼
+        Decision Dashboard
+                   │
+                   ▼
+     Notifications & CRM Update
+```
+---
+## Screenshots
+
+### 1. Persona Selection
+
+Users can choose their role (Customer Success Manager or Sales Manager) to access role-specific AI workflows.
+
+<img width="1600" height="737" alt="image" src="https://github.com/user-attachments/assets/55a936a2-aa84-49d4-bf20-879d7c3dae89" />
+
+---
+
+### 2. Decision Control Dashboard
+
+Upload meeting notes or business documents and monitor document ingestion, AI agent configuration, and processing status.
+
+<img width="1600" height="731" alt="image" src="https://github.com/user-attachments/assets/301a0efa-8a8b-4222-a35e-c90e0dd1c286" />
+
+---
+
+### 3. Agent Pipeline Execution
+
+Displays the Planner Agent's execution strategy, selected AI agents, orchestration path, and confidence level.
+
+<img width="1600" height="737" alt="image" src="https://github.com/user-attachments/assets/b327e274-240d-40c8-b0b4-c2c458bcd4db" />
+
+---
+
+### 4. Agent Execution Trace
+
+Live monitoring of each AI agent, execution logs, processing milestones, and autonomous decision workflow.
+
+<img width="1600" height="727" alt="image" src="https://github.com/user-attachments/assets/7d4269a5-5d37-449d-a1c1-6640068aabea" />
+
+---
+
+### 5. Recommendation & Analysis Results
+
+Shows business analysis, strategic recommendations, confidence score, and human approval interface.
+
+<img width="1600" height="722" alt="image" src="https://github.com/user-attachments/assets/6550e936-3917-4642-9ea8-53b481272f5c" />
+
+---
+
+### 6. Platform Evaluation Summary
+
+Displays execution metrics, AI confidence, latency, adoption rate, and historical decision records.
+
+<img width="1600" height="728" alt="image" src="https://github.com/user-attachments/assets/f79c3c37-431d-4a15-a4dc-697d0738a9f7" />
 
 ## Project Structure
 
@@ -268,4 +351,18 @@ Windows
 ```bash
 .venv\Scripts\activate
 ```
+
+---
+
+# Future Enhancements
+
+- Authentication and Authorization
+- Role-Based Access Control
+- Cloud Deployment
+- Real-Time Notifications
+- Advanced AI Agent Collaboration
+- Analytics Dashboard
+- Multi-Database Support
+
+---
 
