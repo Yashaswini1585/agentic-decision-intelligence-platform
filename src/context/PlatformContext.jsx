@@ -3,33 +3,21 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 const PlatformContext = createContext(null);
 
 export const ROLES = {
-  ANALYST: {
-    id: 'analyst',
-    name: 'Decision Analyst',
-    description: 'Build, configure, and edit decision logic pipelines and coordinate agent schemas.',
+  CUSTOMER_SUCCESS: {
+    id: 'customer_success',
+    name: 'Customer Success Manager',
+    description: 'Analyze customer success meetings, track account health, identify risk factors, and auto-generate retention recommendations.',
     color: 'blue',
-    icon: 'Brain'
+    icon: 'HeartHandshake',
+    clearance: 'L2'
   },
-  SUPERVISOR: {
-    id: 'supervisor',
-    name: 'Agent Supervisor',
-    description: 'Monitor real-time multi-agent execution, check process logs, and override agent pathways.',
+  SALES: {
+    id: 'sales',
+    name: 'Sales Manager',
+    description: 'Evaluate client discovery notes, assess potential deal sizes, align product value propositions, and optimize proposal workflows.',
     color: 'indigo',
-    icon: 'Eye'
-  },
-  EXECUTIVE: {
-    id: 'executive',
-    name: 'Executive Approver',
-    description: 'Review final synthesis recommendations, authorize actions, and compare scenarios.',
-    color: 'sky',
-    icon: 'Award'
-  },
-  ADMIN: {
-    id: 'admin',
-    name: 'System Administrator',
-    description: 'Manage API integrations, coordinate knowledge sources, and view resource costs.',
-    color: 'slate',
-    icon: 'Shield'
+    icon: 'TrendingUp',
+    clearance: 'L2'
   }
 };
 
@@ -191,7 +179,7 @@ export const PlatformProvider = ({ children }) => {
     avatar: 'SJ',
     company: 'Apex Decision Corp'
   });
-  const [selectedRole, setSelectedRole] = useState(ROLES.SUPERVISOR); // Default for demo
+  const [selectedRole, setSelectedRole] = useState(ROLES.CUSTOMER_SUCCESS); // Default for demo
   const [flows, setFlows] = useState(INITIAL_FLOWS);
   const [selectedFlowId, setSelectedFlowId] = useState('flow-101');
 

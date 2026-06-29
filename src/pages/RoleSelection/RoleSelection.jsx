@@ -7,13 +7,19 @@ import {
   Shield, 
   BrainCircuit, 
   ArrowRight,
-  UserCheck 
+  UserCheck,
+  HeartHandshake,
+  TrendingUp
 } from 'lucide-react';
 import { usePlatform, ROLES } from '../../context/PlatformContext';
 import Card, { CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 
 const RoleIcon = ({ name, className }) => {
   switch (name) {
+    case 'HeartHandshake':
+      return <HeartHandshake className={className} />;
+    case 'TrendingUp':
+      return <TrendingUp className={className} />;
     case 'Brain':
       return <Brain className={className} />;
     case 'Eye':
@@ -124,7 +130,7 @@ const RoleSelection = () => {
                       <RoleIcon name={role.icon} className="h-6 w-6" />
                     </div>
                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50 px-2 py-1 rounded">
-                      Clearance: L{role.id === 'admin' ? '3' : role.id === 'executive' ? '3' : '2'}
+                      Clearance: {role.clearance || 'L2'}
                     </span>
                   </div>
 

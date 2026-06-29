@@ -30,7 +30,7 @@ class BusinessAnalysisService:
                 "summary": "No meeting details provided."
             }
         if role is None:
-            role = "supervisor"
+            role = "customer_success"
 
         api_key = os.getenv("GEMINI_API_KEY")
         
