@@ -30,8 +30,7 @@ const Sidebar = () => {
           <BrainCircuit className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-sm font-bold text-white tracking-tight leading-none">Antigravity ADIP</h1>
-          <span className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">Agentic Decision Platform</span>
+          <h1 className="text-sm font-bold text-white tracking-tight leading-none">Agentic Decision Platform</h1>
         </div>
       </div>
 

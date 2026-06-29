@@ -2,10 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
   Bell, 
-  Search, 
-  HelpCircle, 
-  Activity, 
-  TrendingUp 
+  Search 
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 
@@ -35,37 +32,15 @@ const Header = () => {
 
   return (
     <header className="h-16 bg-white border-b border-slate-200/80 px-6 flex items-center justify-between sticky top-0 z-30">
-      {/* Title */}
       <div>
         <h2 className="text-lg font-bold text-slate-800 tracking-tight leading-none">
           {getPageTitle()}
         </h2>
-        <p className="text-xs text-slate-400 mt-1 font-medium hidden sm:block">
-          Apex Decision Corp • Enterprise Governance Node
-        </p>
       </div>
 
       {/* Metrics & Actions */}
       <div className="flex items-center gap-6">
-        {/* Live System Activity Bar */}
-        <div className="hidden lg:flex items-center gap-5 border-r border-slate-100 pr-6">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${activeFlowsCount > 0 ? 'bg-blue-500' : 'bg-slate-400'}`}></span>
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${activeFlowsCount > 0 ? 'bg-blue-600' : 'bg-slate-400'}`}></span>
-            </span>
-            <span className="text-xs text-slate-500 font-semibold">
-              {activeFlowsCount} Running Agents
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-emerald-500" />
-            <span className="text-xs text-slate-500 font-semibold">
-              {pendingApprovalsCount} Action Items
-            </span>
-          </div>
-        </div>
+
 
         {/* Global Search Mock */}
         <div className="relative w-48 xl:w-64 hidden md:block">
@@ -78,17 +53,12 @@ const Header = () => {
           />
         </div>
 
-        {/* Action icons */}
         <div className="flex items-center gap-2.5">
           <button className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition-colors relative" title="Notifications">
             <Bell className="h-5 w-5" />
             {(activeFlowsCount > 0 || pendingApprovalsCount > 0) && (
               <span className="absolute top-1 right-1 h-2 w-2 bg-blue-600 rounded-full border border-white"></span>
             )}
-          </button>
-          
-          <button className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition-colors" title="Documentation">
-            <HelpCircle className="h-5 w-5" />
           </button>
         </div>
 

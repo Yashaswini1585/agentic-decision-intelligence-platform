@@ -79,8 +79,7 @@ const RoleSelection = () => {
             <BrainCircuit className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight leading-none">Apex Decision</h1>
-            <p className="text-[9px] text-slate-400 font-semibold tracking-wider uppercase">Governance Center</p>
+            <h1 className="text-base font-bold text-slate-900 tracking-tight leading-none">Agentic Decision Platform</h1>
           </div>
         </div>
 
@@ -154,7 +153,7 @@ const RoleSelection = () => {
 
       {/* Footer */}
       <div className="max-w-6xl mx-auto w-full text-center text-xs text-slate-400">
-        Apex Decision Intelligence Governance Center • Session expires in 8 hours • Secure Socket IP: 192.168.10.15
+        Agentic Decision Platform • Session expires in 8 hours • Secure Socket IP: 192.168.10.15
       </div>
     </div>
   );
