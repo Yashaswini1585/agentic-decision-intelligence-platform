@@ -99,8 +99,8 @@ const Dashboard = () => {
       setUploadedFiles(prev => prev.filter((_, i) => i !== index));
       setAnalyzingFile(null);
 
-      // 4. Navigate to Agent Pipeline page and auto-run simulation
-      navigate('/processing', { state: { runSimulation: true } });
+      // 4. Navigate directly to Results page
+      navigate('/results');
 
     } catch (error) {
       console.warn('FastAPI backend offline or unavailable. Falling back to local optimization mockup.', error);
@@ -125,7 +125,7 @@ const Dashboard = () => {
         setUploadedFiles(prev => prev.filter((_, i) => i !== index));
         setAnalyzingFile(null);
 
-        navigate('/processing', { state: { runSimulation: true } });
+        navigate('/results');
       }, 1500);
     }
   };

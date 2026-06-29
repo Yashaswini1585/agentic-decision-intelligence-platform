@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   Check, 
   Square, 
@@ -98,22 +98,12 @@ const INITIAL_STEPS = [
 
 const Processing = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const consoleEndRef = useRef(null);
 
   // Core state: Step checklist (unchecked, active, completed)
   const [steps, setSteps] = useState(INITIAL_STEPS.map(s => ({ ...s, status: 'unchecked' })));
   const [activeStepId, setActiveStepId] = useState(1);
   const [isSimulating, setIsSimulating] = useState(false);
-
-  // Auto-trigger simulation if routed from document upload
-  useEffect(() => {
-    if (location.state?.runSimulation) {
-      setIsSimulating(true);
-      // Clear location state to prevent runSimulation re-triggering on manual refresh
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location.state, navigate, location.pathname]);
   const [terminalLogs, setTerminalLogs] = useState(['[System] Pipeline initialized. All agent nodes idle.']);
 
   // Handle auto-scroll terminal logs
