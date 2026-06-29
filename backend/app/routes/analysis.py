@@ -25,6 +25,7 @@ async def upload_document(file: UploadFile = File(...)):
     Endpoint to ingest meeting notes files.
     Parses files (TXT, PDF, DOCX) and saves structured details to the database.
     """
+    print("[UPLOAD] Started", flush=True)
     if not file:
         raise HTTPException(status_code=400, detail="No file uploaded")
     
@@ -77,6 +78,7 @@ async def upload_document(file: UploadFile = File(...)):
         "meeting_notes": meeting_notes
     })
     
+    print("[UPLOAD] Completed", flush=True)
     return {
         "status": "success",
         "message": "File uploaded successfully",
@@ -93,6 +95,7 @@ async def analyze_document(request: AnalyzeRequest):
     Endpoint to coordinate agentic decision analysis on ingested notes.
     Runs the PlannerAgent pipeline on the document context and returns real agent insights.
     """
+    print("[ANALYZE] Request received", flush=True)
     if not request.file_id:
         raise HTTPException(status_code=400, detail="Invalid or missing file_id")
         
@@ -120,15 +123,22 @@ async def analyze_document(request: AnalyzeRequest):
     if not customer_info:
         customer_info = get_customer_info("Acme Global Conglomerate Inc.")
 
-    # Execute Planner Agent pipeline
-    planner = PlannerAgent()
-    pipeline_result = planner.execute(
-        customer_name=customer_name,
-        meeting_notes=meeting_notes,
-        role="customer_success"
-    )
+    try:
+        # Execute Planner Agent pipeline
+        planner = PlannerAgent()
+        pipeline_result = planner.execute(
+            customer_name=customer_name,
+            meeting_notes=meeting_notes,
+            role="customer_success"
+        )
+    except Exception as e:
+        import logging
+        logging.exception("Exception occurred during PlannerAgent execution")
+        raise HTTPException(status_code=500, detail=f"PlannerAgent pipeline execution failed: {str(e)}")
 
     analysis_data = pipeline_result.get("business_analysis", {}).get("analysis", {})
+
+    print("[API] Sending response", flush=True)
 
     # Compile the final API response using pipeline results
     return {
@@ -146,7 +156,10 @@ async def analyze_document(request: AnalyzeRequest):
         },
         "recommendations": pipeline_result.get("recommendations", []),
         "explanation": pipeline_result.get("explanations", {}),
-        "meeting_notes": meeting_notes
+        "meeting_notes": meeting_notes,
+        "planner_decision": pipeline_result.get("planner_decision"),
+        "execution": pipeline_result.get("execution"),
+        "logs": pipeline_result.get("logs")
     }
 
 @router.post("/export-audit")

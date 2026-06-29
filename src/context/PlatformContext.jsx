@@ -173,13 +173,8 @@ const INITIAL_FLOWS = [
 ];
 
 export const PlatformProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    name: 'Sarah Jenkins',
-    email: 's.jenkins@enterprise.ai',
-    avatar: 'SJ',
-    company: 'Apex Decision Corp'
-  });
-  const [selectedRole, setSelectedRole] = useState(ROLES.CUSTOMER_SUCCESS); // Default for demo
+  const [user, setUser] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
   const [flows, setFlows] = useState(INITIAL_FLOWS);
   const [selectedFlowId, setSelectedFlowId] = useState('flow-101');
 
@@ -390,6 +385,10 @@ export const PlatformProvider = ({ children }) => {
             progress: 100,
             meetingNotes: result.meeting_notes,
             customerSummary: result.customer_summary,
+            plannerDecision: result.planner_decision,
+            execution: result.execution,
+            logs: result.logs,
+            simulationWatched: false,
             recommendation: {
               action: result.recommendations[0]?.title || "Strategy realignment",
               savings: result.customer_summary?.contract_value || '$12,000 baseline',
@@ -416,6 +415,20 @@ export const PlatformProvider = ({ children }) => {
     setSelectedFlowId('flow-101');
   };
 
+  const markSimulationWatched = (flowId) => {
+    setFlows(prevFlows => {
+      return prevFlows.map(flow => {
+        if (flow.id === flowId) {
+          return {
+            ...flow,
+            simulationWatched: true
+          };
+        }
+        return flow;
+      });
+    });
+  };
+
   const getSelectedFlow = () => {
     return flows.find(f => f.id === selectedFlowId) || flows[0];
   };
@@ -434,6 +447,7 @@ export const PlatformProvider = ({ children }) => {
       approveDecision,
       rejectDecision,
       injectAnalysisResult,
+      markSimulationWatched,
       selectedFlow: getSelectedFlow()
     }}>
       {children}
