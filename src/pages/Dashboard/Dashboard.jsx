@@ -4,13 +4,10 @@ import {
   FileText, 
   UploadCloud, 
   CheckCircle2, 
-  Clock, 
   AlertCircle, 
   TrendingUp, 
   Cpu, 
-  BrainCircuit, 
   ArrowRight,
-  RefreshCw,
   Sparkles,
   Loader2,
   Trash2
@@ -29,13 +26,7 @@ const Dashboard = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [analyzingFile, setAnalyzingFile] = useState(null);
 
-  // State for meeting notes analysis queue
-  const [analyses, setAnalyses] = useState([
-    { id: 'an-001', filename: 'supplier_renegotiation_minutes_q2.pdf', date: '2026-06-25 14:10', size: '1.2 MB', status: 'completed', actionItems: 5, confidence: '94%' },
-    { id: 'an-002', filename: 'saas_infrastructure_sync_notes.docx', date: '2026-06-22 09:30', size: '420 KB', status: 'completed', actionItems: 3, confidence: '89%' },
-    { id: 'an-003', filename: 'q3_global_logistic_alignment.txt', date: '2026-06-27 18:30', size: '15 KB', status: 'analyzing', actionItems: 0, confidence: 'Pending' },
-    { id: 'an-004', filename: 'competitor_pricing_session.pdf', date: '2026-06-14 11:15', size: '2.4 MB', status: 'failed', actionItems: 0, confidence: 'N/A' }
-  ]);
+
 
   // Drag & drop handlers
   const handleDrag = (e) => {
@@ -104,18 +95,7 @@ const Dashboard = () => {
       // 2. Inject response into PlatformContext state
       injectAnalysisResult(result);
 
-      // 3. Update dashboard analytics list
-      const newAnalysis = {
-        id: `an-00${analyses.length + 1}`,
-        filename: file.name,
-        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
-        size: file.size,
-        status: 'completed',
-        actionItems: result.recommendations.length,
-        confidence: `${Math.round(result.confidence_score * 100)}%`
-      };
 
-      setAnalyses(prev => [newAnalysis, ...prev]);
       setUploadedFiles(prev => prev.filter((_, i) => i !== index));
       setAnalyzingFile(null);
 
@@ -141,17 +121,7 @@ const Dashboard = () => {
 
         injectAnalysisResult(dummyResult);
 
-        const newAnalysis = {
-          id: `an-00${analyses.length + 1}`,
-          filename: file.name,
-          date: new Date().toISOString().replace('T', ' ').substring(0, 16),
-          size: file.size,
-          status: 'completed',
-          actionItems: 3,
-          confidence: '92%'
-        };
 
-        setAnalyses(prev => [newAnalysis, ...prev]);
         setUploadedFiles(prev => prev.filter((_, i) => i !== index));
         setAnalyzingFile(null);
 
@@ -255,207 +225,98 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      {/* Main Grid: Upload Center & Recent Queue */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Left 1/3: Document Upload Center */}
-        <div className="lg:col-span-1 space-y-6">
-          <Card className="h-full flex flex-col justify-between">
-            <div>
-              <CardHeader className="pb-4">
-                <CardTitle>Notes Ingestion</CardTitle>
-                <CardDescription>Drag and drop text transcripts or audio transcript files to begin parsing.</CardDescription>
-              </CardHeader>
-              
-              <CardContent className="space-y-5">
-                {/* Drag and Drop Zone */}
-                <div 
-                  onDragEnter={handleDrag}
-                  onDragOver={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDrop={handleDrop}
-                  className={`
-                    border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200 cursor-pointer
-                    ${dragActive 
-                      ? 'border-blue-600 bg-blue-50/30' 
-                      : 'border-slate-200 hover:border-slate-350 hover:bg-slate-50/30'}
-                  `}
-                >
-                  <input 
-                    type="file" 
-                    id="file-upload-input"
-                    multiple 
-                    onChange={handleFileChange}
-                    className="hidden"
-                    accept=".txt,.doc,.docx,.pdf"
-                  />
-                  
-                  <label htmlFor="file-upload-input" className="cursor-pointer block space-y-3">
-                    <div className="mx-auto w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                      <UploadCloud className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold text-blue-600 hover:text-blue-700 block">Click to select files</span>
-                      <span className="text-[11px] text-slate-400 block mt-1">or drag & drop them here</span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block bg-slate-50 py-1 rounded">
-                      TXT, DOCX, PDF (MAX. 10MB)
-                    </span>
-                  </label>
-                </div>
-
-                {/* Queue of Staged Files to Analyze */}
-                {uploadedFiles.length > 0 && (
-                  <div className="space-y-2.5">
-                    <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Staged Documents ({uploadedFiles.length})</h4>
-                    <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
-                      {uploadedFiles.map((file, idx) => (
-                        <div key={idx} className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between gap-3 text-xs">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <FileText className="h-4 w-4 text-blue-600 shrink-0" />
-                            <div className="truncate font-semibold text-slate-700" title={file.name}>
-                              {file.name}
-                            </div>
-                            <span className="text-[10px] text-slate-400 font-bold shrink-0">({file.size})</span>
-                          </div>
-                          
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            {analyzingFile === file.name ? (
-                              <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
-                            ) : (
-                              <>
-                                <button 
-                                  onClick={() => triggerAnalysis(file, idx)}
-                                  className="text-[10px] font-bold px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                  disabled={analyzingFile !== null}
-                                >
-                                  Analyze
-                                </button>
-                                <button 
-                                  onClick={() => removeFile(idx)}
-                                  className="text-slate-400 hover:text-red-500 p-0.5"
-                                  disabled={analyzingFile !== null}
-                                >
-                                  <Trash2 className="h-3.5 w-3.5" />
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </div>
+      {/* Document Upload Center */}
+      <div className="w-full">
+        <Card className="flex flex-col justify-between">
+          <div>
+            <CardHeader className="pb-4">
+              <CardTitle>Notes Ingestion</CardTitle>
+              <CardDescription>Drag and drop text transcripts or audio transcript files to begin parsing.</CardDescription>
+            </CardHeader>
             
-            <div className="p-6 border-t border-slate-100 bg-slate-50/40 mt-4 rounded-b-xl">
-              <div className="flex gap-2 text-[10px] text-slate-400 font-semibold items-start leading-relaxed">
-                <BrainCircuit className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-                <span>Documents processed locally within sandbox rules. Action matrices generated directly connect to decision logic nodes.</span>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Right 2/3: Recent Analyses Table queue */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="h-full flex flex-col justify-between">
-            <div>
-              <CardHeader className="flex flex-row justify-between items-center pb-5 border-b border-slate-100">
-                <div>
-                  <CardTitle>Recent Notes Analyses</CardTitle>
-                  <CardDescription>Queue of meeting notes audited and parsed by autonomic agent nodes.</CardDescription>
-                </div>
-                <Badge variant="slate">{analyses.length} Total Logs</Badge>
-              </CardHeader>
-
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="bg-slate-50 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-100">
-                        <th className="px-6 py-3.5">Document Details</th>
-                        <th className="px-4 py-3.5">Uploaded</th>
-                        <th className="px-4 py-3.5">Action Items</th>
-                        <th className="px-4 py-3.5">Confidence</th>
-                        <th className="px-4 py-3.5">Status</th>
-                        <th className="px-6 py-3.5 text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 text-sm">
-                      {analyses.map((item) => {
-                        const state = statusDetails[item.status] || statusDetails.failed;
-                        const StateIcon = state.icon;
-                        return (
-                          <tr key={item.id} className="hover:bg-slate-50/40 transition-colors">
-                            {/* Filename & size */}
-                            <td className="px-6 py-4.5">
-                              <div className="font-bold text-slate-900 truncate max-w-[200px]" title={item.filename}>
-                                {item.filename}
-                              </div>
-                              <span className="text-[10px] text-slate-400 font-semibold">{item.size}</span>
-                            </td>
-
-                            {/* Timestamp */}
-                            <td className="px-4 py-4.5 text-xs font-semibold text-slate-500 whitespace-nowrap">
-                              {item.date}
-                            </td>
-
-                            {/* Actions found */}
-                            <td className="px-4 py-4.5 text-xs font-bold text-slate-700">
-                              {item.actionItems > 0 ? (
-                                <Badge variant="indigo">{item.actionItems} items</Badge>
-                              ) : (
-                                <span className="text-slate-400">—</span>
-                              )}
-                            </td>
-
-                            {/* Confidence Score */}
-                            <td className="px-4 py-4.5 text-xs font-bold text-blue-600 font-mono">
-                              {item.confidence}
-                            </td>
-
-                            {/* Status label */}
-                            <td className="px-4 py-4.5">
-                              <Badge variant={state.variant} pulse={state.pulse}>
-                                <StateIcon className={`h-3 w-3 shrink-0 ${state.pulse ? 'animate-spin' : ''}`} />
-                                <span>{state.label}</span>
-                              </Badge>
-                            </td>
-
-                            {/* View link */}
-                            <td className="px-6 py-4.5 text-right">
-                              <button 
-                                onClick={() => navigate('/processing')}
-                                className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1 hover:underline disabled:opacity-50"
-                                disabled={item.status === 'analyzing' || item.status === 'failed'}
-                              >
-                                <span>Report</span>
-                                <ArrowRight className="h-3 w-3" />
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </div>
-            
-            <div className="p-6 border-t border-slate-100 flex justify-end bg-slate-50/20">
-              <button 
-                onClick={() => navigate('/processing')}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-700 flex items-center gap-1.5"
+            <CardContent className="space-y-5">
+              {/* Drag and Drop Zone */}
+              <div 
+                onDragEnter={handleDrag}
+                onDragOver={handleDrag}
+                onDragLeave={handleDrag}
+                onDrop={handleDrop}
+                className={`
+                  border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200 cursor-pointer
+                  ${dragActive 
+                    ? 'border-blue-600 bg-blue-50/30' 
+                    : 'border-slate-200 hover:border-slate-350 hover:bg-slate-50/30'}
+                `}
               >
-                <span>View Full Agent Processing Pipeline</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </Card>
-        </div>
+                <input 
+                  type="file" 
+                  id="file-upload-input"
+                  multiple 
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept=".txt,.doc,.docx,.pdf"
+                />
+                
+                <label htmlFor="file-upload-input" className="cursor-pointer block space-y-3">
+                  <div className="mx-auto w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <UploadCloud className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-blue-600 hover:text-blue-700 block">Click to select files</span>
+                    <span className="text-[11px] text-slate-400 block mt-1">or drag & drop them here</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block bg-slate-50 py-1 rounded">
+                    TXT, DOCX, PDF (MAX. 10MB)
+                  </span>
+                </label>
+              </div>
 
+              {/* Queue of Staged Files to Analyze */}
+              {uploadedFiles.length > 0 && (
+                <div className="space-y-2.5">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Staged Documents ({uploadedFiles.length})</h4>
+                  <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
+                    {uploadedFiles.map((file, idx) => (
+                      <div key={idx} className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between gap-3 text-xs">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+                          <div className="truncate font-semibold text-slate-700" title={file.name}>
+                            {file.name}
+                          </div>
+                          <span className="text-[10px] text-slate-400 font-bold shrink-0">({file.size})</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {analyzingFile === file.name ? (
+                            <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
+                          ) : (
+                            <>
+                              <button 
+                                onClick={() => triggerAnalysis(file, idx)}
+                                className="text-[10px] font-bold px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                disabled={analyzingFile !== null}
+                              >
+                                Analyze
+                              </button>
+                              <button 
+                                onClick={() => removeFile(idx)}
+                                className="text-slate-400 hover:text-red-500 p-0.5"
+                                disabled={analyzingFile !== null}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </div>
+
+        </Card>
       </div>
 
       {/* Flow Wizard Navigation Banner */}
