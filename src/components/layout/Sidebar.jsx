@@ -7,8 +7,7 @@ import {
   BarChart3, 
   LogOut, 
   BrainCircuit,
-  Sliders,
-  HelpCircle
+  Sliders
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 

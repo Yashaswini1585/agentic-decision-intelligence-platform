@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Check, 
-  Square, 
-  CheckSquare, 
   Play, 
   RotateCcw, 
   Terminal, 
@@ -17,7 +14,9 @@ import {
   TrendingUp,
   Award,
   Sparkles,
-  BrainCircuit
+  BrainCircuit,
+  CheckCircle2,
+  SkipForward
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 import Card, { CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
@@ -33,7 +32,7 @@ const getAgentIcon = (name) => {
   if (lowercase.includes('product') || lowercase.includes('documentation') || lowercase.includes('technical') || lowercase.includes('search')) return Search;
   if (lowercase.includes('recommendation') || lowercase.includes('award')) return Award;
   if (lowercase.includes('explanation') || lowercase.includes('sparkles') || lowercase.includes('justification') || lowercase.includes('proposal')) return Sparkles;
-  return Check;
+  return BrainCircuit;
 };
 
 const getLogsForAgent = (agentName, allLogs) => {
@@ -270,26 +269,26 @@ const Processing = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-blue-600 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50/80 border border-blue-150 px-2 py-0.5 rounded-md">
               Autonomic Monitor
             </span>
-            <span className="text-xs text-slate-400">Step 4 of 6</span>
+            <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Step 4 of 6</span>
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">Agent Process Monitor</h1>
-          <p className="text-sm text-slate-500">Live monitoring console tracking the Planner Agent's orchestration strategy and logs.</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight mt-1.5">Agent Process Monitor</h1>
+          <p className="text-xs text-slate-500 mt-1">Live monitoring console tracking the Planner Agent's orchestration strategy and logs.</p>
         </div>
 
         {/* Action Controls */}
         <div className="flex flex-wrap gap-2.5 shrink-0">
-          <Button onClick={resetAllSteps} variant="outline" className="flex items-center gap-2 bg-white border-slate-200">
-            <RotateCcw className="h-4 w-4 text-slate-500" />
+          <Button onClick={resetAllSteps} variant="outline" className="flex items-center gap-2 bg-white border-slate-200 shadow-xs text-slate-650 h-9 py-1 px-3">
+            <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
             <span>Reset Pipeline</span>
           </Button>
 
           <Button 
             onClick={markAllComplete} 
             variant="secondary" 
-            className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200"
+            className="flex items-center gap-2 h-9 py-1 px-3"
             disabled={allCompleted}
           >
             <span>Force Complete</span>
@@ -299,19 +298,19 @@ const Processing = () => {
             <Button 
               onClick={() => setIsSimulating(false)} 
               variant="outline" 
-              className="flex items-center gap-2 bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100"
+              className="flex items-center gap-2 bg-amber-50/50 border-amber-200 text-amber-700 hover:bg-amber-100/50 h-9 py-1 px-3"
             >
-              <Loader2 className="h-4 w-4 animate-spin text-amber-600" />
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
               <span>Pause Monitor</span>
             </Button>
           ) : (
             <Button 
               onClick={() => setIsSimulating(true)} 
               variant="primary" 
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 h-9 py-1 px-3"
               disabled={allCompleted}
             >
-              <Play className="h-4 w-4 fill-white" />
+              <Play className="h-3.5 w-3.5 fill-white text-white" />
               <span>Start Live Trace</span>
             </Button>
           )}
@@ -320,31 +319,32 @@ const Processing = () => {
 
       {/* Planner Decision Panel Section */}
       {selectedFlow && selectedFlow.plannerDecision && (
-        <Card className="border-blue-100 bg-blue-50/5 shadow-xs">
-          <CardHeader className="pb-3 border-b border-slate-100/80">
+        <Card className="border-slate-200/50 shadow-xs relative overflow-hidden bg-slate-50/30">
+          <CardHeader className="pb-3" border>
             <div className="flex justify-between items-center">
-              <CardTitle className="text-blue-950 flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider">
-                <BrainCircuit className="h-5 w-5 text-blue-600 animate-pulse-slow shrink-0" />
-                <span>Planner Inferences & Selection Strategy</span>
+              <CardTitle className="text-slate-900 flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+                <BrainCircuit className="h-4.5 w-4.5 text-blue-600 shrink-0" />
+                <span>Planner Inferences & Orchestration Strategy</span>
               </CardTitle>
-              <Badge variant="blue" className="text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+              <Badge variant="blue">
                 Dynamic Route Synced
               </Badge>
             </div>
-            <CardDescription className="text-xs text-slate-400">
-              The Planner evaluated the uploaded document and active persona constraints to dynamically build this execution matrix.
+            <CardDescription>
+              The Planner evaluated the active persona constraints and notes keywords to construct this optimal agent topology.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-5 grid grid-cols-1 md:grid-cols-4 gap-6 text-xs">
+          
+          <CardContent className="pt-4 grid grid-cols-1 md:grid-cols-4 gap-6 text-xs">
             {/* Column 1: Persona & Meeting Type */}
             <div className="space-y-4">
               <div>
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Selected Persona</span>
-                <span className="text-xs font-bold text-slate-800 block mt-0.5">{selectedFlow.plannerDecision.persona}</span>
+                <span className="text-xs font-bold text-slate-800 block mt-1">{selectedFlow.plannerDecision.persona}</span>
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Meeting Type</span>
-                <span className="text-xs font-bold text-slate-800 block mt-0.5">{selectedFlow.plannerDecision.meeting_type}</span>
+                <span className="text-xs font-bold text-slate-800 block mt-1">{selectedFlow.plannerDecision.meeting_type}</span>
               </div>
             </div>
 
@@ -352,11 +352,11 @@ const Processing = () => {
             <div className="md:col-span-2 space-y-4">
               <div>
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Execution Strategy Path</span>
-                <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
                   {selectedFlow.plannerDecision.execution_strategy.map((agent, i) => (
                     <React.Fragment key={agent}>
                       {i > 0 && <ChevronRight className="h-3 w-3 text-slate-300" />}
-                      <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-100 font-semibold text-[10px]">
+                      <span className="px-2 py-0.5 bg-white text-slate-700 rounded-md border border-slate-200 font-semibold text-[10px] shadow-xs">
                         {agent}
                       </span>
                     </React.Fragment>
@@ -365,10 +365,10 @@ const Processing = () => {
               </div>
               
               <div>
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Bypassed Agents & Reason</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Bypassed Agents & Optimization Strategy</span>
                 <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
                   <strong className="text-slate-700">Skipped:</strong> {selectedFlow.plannerDecision.skipped_agents.join(', ') || 'None'}.<br/>
-                  <strong className="text-slate-700">Reason:</strong> {selectedFlow.plannerDecision.reason}
+                  <strong className="text-slate-700">Rationale:</strong> {selectedFlow.plannerDecision.reason}
                 </p>
               </div>
             </div>
@@ -378,17 +378,17 @@ const Processing = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Complexity</span>
-                  <span className="text-xs font-bold text-slate-800 block mt-0.5">Medium Complexity</span>
+                  <span className="text-xs font-bold text-slate-850 block mt-1">Medium Complexity</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Est. Runtime</span>
-                  <span className="text-xs font-bold text-slate-800 block mt-0.5">{selectedFlow.plannerDecision.estimated_runtime || '1.9s'}</span>
+                  <span className="text-xs font-bold text-slate-850 block mt-1">{selectedFlow.plannerDecision.estimated_runtime || '1.9s'}</span>
                 </div>
               </div>
               
               <div>
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Expected Confidence</span>
-                <div className="flex items-center gap-2 mt-0.5">
+                <div className="flex items-center gap-2 mt-1.5">
                   <span className="text-xs font-black text-slate-900">{selectedFlow.plannerDecision.expected_confidence || 92}%</span>
                   <div className="w-24 bg-slate-100 rounded-full h-1.5 overflow-hidden">
                     <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${selectedFlow.plannerDecision.expected_confidence || 92}%` }}></div>
@@ -404,128 +404,130 @@ const Processing = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left Column: Interactive status checklist */}
-        <div className="lg:col-span-1 space-y-6">
-          <Card className="h-full">
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-center">
-                <CardTitle>Autonomic Milestones</CardTitle>
-                <span className="text-xs font-bold text-blue-605">{progressPercent}%</span>
-              </div>
-              <CardDescription>Visual progress of active vs bypassed nodes in the runtime pipeline.</CardDescription>
-              {/* Progress Bar */}
-              <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden mt-3">
-                <div 
-                  className="bg-blue-600 h-1.5 rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${progressPercent}%` }}
-                ></div>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="p-0">
-              <div className="px-6 pb-6 space-y-3">
-                {steps.map((step) => {
-                  const StepIcon = step.icon;
-                  const isCompleted = step.status === 'completed';
-                  const isActive = step.status === 'running';
-                  const isSkipped = step.status === 'skipped';
+        <div className="lg:col-span-1">
+          <Card className="h-full border-slate-200/50 shadow-xs flex flex-col justify-between">
+            <div>
+              <CardHeader className="pb-4" border>
+                <div className="flex justify-between items-center">
+                  <CardTitle>Orchestration Milestones</CardTitle>
+                  <span className="text-xs font-bold text-blue-600">{progressPercent}%</span>
+                </div>
+                <CardDescription>Execution topology for active and bypassed multi-agent nodes.</CardDescription>
+                {/* Progress Bar */}
+                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden mt-3">
+                  <div 
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 h-1.5 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${progressPercent}%` }}
+                  ></div>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="pt-4 px-0">
+                <div className="px-4 space-y-2">
+                  {steps.map((step) => {
+                    const StepIcon = step.icon;
+                    const isCompleted = step.status === 'completed';
+                    const isActive = step.status === 'running';
+                    const isSkipped = step.status === 'skipped';
 
-                  return (
-                    <div 
-                      key={step.id} 
-                      onClick={() => toggleStepCompleted(step.id)}
-                      title={isSkipped ? "Skipped because Planner determined this agent was unnecessary for the uploaded meeting." : ""}
-                      className={`
-                        flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200
-                        ${isCompleted 
-                          ? 'bg-emerald-50/40 border-emerald-100 text-emerald-800 cursor-pointer' 
-                          : isActive 
-                            ? 'bg-blue-50/30 border-blue-200 ring-2 ring-blue-50 text-slate-900 cursor-pointer animate-pulse' 
-                            : isSkipped
-                              ? 'bg-slate-50 border-slate-200/50 text-slate-300 opacity-60 cursor-not-allowed'
-                              : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50/50 hover:border-slate-300 cursor-pointer'}
-                      `}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        {/* Status Checkbox */}
-                        <div className="shrink-0 transition-transform active:scale-95">
-                          {isCompleted ? (
-                            <CheckSquare className="h-5 w-5 text-emerald-600" />
-                          ) : isSkipped ? (
-                            <Square className="h-5 w-5 text-slate-200" />
+                    return (
+                      <div 
+                        key={step.id} 
+                        onClick={() => toggleStepCompleted(step.id)}
+                        title={isSkipped ? "Skipped: Bypassed by Planner as unnecessary for the input notes." : ""}
+                        className={`
+                          flex items-center justify-between p-3.5 rounded-xl border transition-all duration-200
+                          ${isCompleted 
+                            ? 'bg-emerald-50/40 border-emerald-100 text-emerald-800 cursor-pointer shadow-xs' 
+                            : isActive 
+                              ? 'bg-blue-50/30 border-blue-200 ring-2 ring-blue-50/60 text-slate-900 cursor-pointer animate-pulse' 
+                              : isSkipped
+                                ? 'bg-slate-50 border-slate-150 text-slate-350 opacity-60 cursor-not-allowed'
+                                : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300 cursor-pointer shadow-xs'}
+                        `}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          {/* Status Indicator */}
+                          <div className="shrink-0">
+                            {isCompleted ? (
+                              <CheckCircle2 className="h-4.5 w-4.5 text-emerald-600" />
+                            ) : isSkipped ? (
+                              <SkipForward className="h-4.5 w-4.5 text-slate-300" />
+                            ) : (
+                              <div className={`h-4.5 w-4.5 rounded-full border-2 ${isActive ? 'border-blue-500 bg-blue-50 animate-ping-slow' : 'border-slate-300'}`} />
+                            )}
+                          </div>
+
+                          {/* Step Label */}
+                          <div className="truncate leading-tight">
+                            <span className={`text-xs font-semibold ${
+                              isCompleted 
+                                ? 'text-emerald-950 font-bold' 
+                                : isSkipped 
+                                  ? 'text-slate-400 font-normal line-through' 
+                                  : 'text-slate-800'
+                            }`}>
+                              {step.name}
+                            </span>
+                            {isSkipped && (
+                              <span className="block text-[8px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                                Bypassed Node
+                              </span>
+                            )}
+                            {isActive && (
+                              <span className="block text-[8px] text-blue-500 font-bold uppercase tracking-wider mt-0.5 animate-pulse">
+                                Active Execution
+                              </span>
+                            )}
+                            {isCompleted && (
+                              <span className="block text-[8px] text-emerald-600 font-bold uppercase tracking-wider mt-0.5">
+                                Finished ({step.duration})
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Right indicator */}
+                        <div className="shrink-0 ml-2">
+                          {isActive ? (
+                            <Loader2 className="h-3.5 w-3.5 text-blue-500 animate-spin" />
                           ) : (
-                            <Square className={`h-5 w-5 ${isActive ? 'text-blue-500' : 'text-slate-300'}`} />
-                          )}
-                        </div>
-
-                        {/* Step Label */}
-                        <div className="truncate leading-tight">
-                          <span className={`text-xs font-bold ${
-                            isCompleted 
-                              ? 'text-emerald-950 font-semibold' 
-                              : isSkipped 
-                                ? 'text-slate-400 font-normal line-through' 
-                                : 'text-slate-800'
-                          }`}>
-                            {step.name}
-                          </span>
-                          {isSkipped && (
-                            <span className="block text-[8px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
-                              Bypassed
-                            </span>
-                          )}
-                          {isActive && (
-                            <span className="block text-[8px] text-blue-500 font-bold uppercase tracking-wider mt-0.5 animate-pulse">
-                              Executing
-                            </span>
-                          )}
-                          {isCompleted && (
-                            <span className="block text-[8px] text-emerald-600 font-bold uppercase tracking-wider mt-0.5">
-                              Completed ({step.duration})
-                            </span>
+                            <StepIcon className={`h-3.5 w-3.5 ${
+                              isCompleted 
+                                ? 'text-emerald-500' 
+                                : isSkipped 
+                                  ? 'text-slate-200' 
+                                  : 'text-slate-450'
+                            }`} />
                           )}
                         </div>
                       </div>
-
-                      {/* Right indicator */}
-                      <div className="shrink-0 ml-2">
-                        {isActive ? (
-                          <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
-                        ) : (
-                          <StepIcon className={`h-4 w-4 ${
-                            isCompleted 
-                              ? 'text-emerald-500' 
-                              : isSkipped 
-                                ? 'text-slate-200' 
-                                : 'text-slate-400'
-                          }`} />
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </div>
           </Card>
         </div>
 
         {/* Right Column: Console Log Viewer */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="h-full flex flex-col bg-slate-950 text-slate-100 border-slate-900 shadow-xl overflow-hidden min-h-[500px]">
+          <Card className="h-full flex flex-col bg-slate-950 text-slate-100 border-slate-900 shadow-xl overflow-hidden min-h-[520px] p-0">
             {/* Header */}
-            <div className="px-5 py-3.5 bg-slate-900 border-b border-slate-800 flex justify-between items-center shrink-0">
+            <div className="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800/80 flex justify-between items-center shrink-0">
               <div className="flex items-center gap-2">
                 <Terminal className="h-4 w-4 text-slate-400" />
-                <span className="text-xs font-bold text-slate-300 font-mono">Autonomic Log Trace</span>
+                <span className="text-[10px] font-bold text-slate-300 font-mono tracking-wider uppercase">Autonomic Log Trace</span>
               </div>
-              <Badge variant={allCompleted ? 'emerald' : 'blue'}>
+              <Badge variant={allCompleted ? 'emerald' : 'blue'} className="px-2.5 py-0.5 text-[9px]">
                 {allCompleted ? 'Trace Ready' : 'Executing'}
               </Badge>
             </div>
 
             {/* Screen */}
-            <CardContent className="flex-1 p-5 overflow-y-auto font-mono text-xs text-slate-350 space-y-2 select-text leading-relaxed">
+            <div className="flex-1 p-5 overflow-y-auto font-mono text-[11px] text-slate-300 space-y-2 select-text leading-relaxed bg-slate-950">
               {terminalLogs.map((log, index) => {
-                let textStyle = "text-slate-300";
+                let textStyle = "text-slate-400";
                 if (log.includes('[User Override]') || log.includes('[User Action]')) textStyle = "text-amber-400 font-semibold";
                 if (log.includes('[System]')) textStyle = "text-blue-400 font-bold";
                 if (log.includes('successfully') || log.includes('completed') || log.includes('Offer')) textStyle = "text-emerald-400";
@@ -544,10 +546,10 @@ const Processing = () => {
                 </div>
               )}
               <div ref={consoleEndRef}></div>
-            </CardContent>
+            </div>
 
             {/* Footer */}
-            <div className="px-5 py-3 bg-slate-900 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-500 font-mono shrink-0">
+            <div className="px-5 py-3 bg-slate-900 border-t border-slate-800/80 flex justify-between items-center text-[10px] text-slate-500 font-mono shrink-0">
               <span>CHECKLIST_NODES: {steps.length}</span>
               <span>VERIFIED: {completedCount} COMPLETED | {steps.filter(s => s.status === 'skipped').length} BYPASSED</span>
             </div>
@@ -557,18 +559,20 @@ const Processing = () => {
       </div>
 
       {/* Flow Wizard Navigation Banner */}
-      <div className="bg-slate-900 border border-slate-800 text-white rounded-xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-md mt-8">
-        <div>
-          <span className="text-[10px] bg-blue-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Flow Step 4 of 6</span>
-          <h3 className="text-lg font-bold mt-1.5">Checklist Step Verification Complete?</h3>
-          <p className="text-xs text-slate-400">Once you have marked or observed the pipeline complete, proceed to the Results page to review dynamic recommendations.</p>
+      <div className="bg-slate-950 border border-slate-900 text-white rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm mt-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 via-transparent to-transparent pointer-events-none" />
+        <div className="relative z-10 space-y-1">
+          <span className="text-[9px] bg-blue-600 border border-blue-500/20 px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider">Flow Step 4 of 6</span>
+          <h3 className="text-base font-bold mt-1 text-slate-100">Checklist Sequence Verification Complete?</h3>
+          <p className="text-xs text-slate-400">Once active agent processing is completed, proceed to the Results page to review retention optimization decisions.</p>
         </div>
         <Button 
           onClick={() => navigate('/results')} 
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold shrink-0 flex items-center gap-2"
+          variant="primary"
+          className="shrink-0 flex items-center gap-2 relative z-10 py-2.5"
         >
           <span>Proceed to Results</span>
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </div>
     </div>

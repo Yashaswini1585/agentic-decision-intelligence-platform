@@ -43,7 +43,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex bg-slate-50 text-slate-700">
+    <div className="min-h-screen w-full flex bg-slate-50 text-slate-700">
       {/* Left Pane: Branding & Graphics (Hidden on Mobile) */}
       <div className="hidden lg:flex w-7/12 bg-slate-900 text-white relative overflow-hidden flex-col justify-between p-12">
         {/* Top Header */}

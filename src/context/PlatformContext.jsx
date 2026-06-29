@@ -295,7 +295,7 @@ export const PlatformProvider = ({ children }) => {
   }, []);
 
   // Action methods
-  const login = (email, password) => {
+  const login = (email, _password) => {
     setUser({
       name: 'Sarah Jenkins',
       email: email || 's.jenkins@enterprise.ai',

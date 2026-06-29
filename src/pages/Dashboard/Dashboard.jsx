@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { 
   FileText, 
   UploadCloud, 
-  CheckCircle2, 
-  AlertCircle, 
   TrendingUp, 
   Cpu, 
   ArrowRight,
@@ -14,11 +12,10 @@ import {
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 import Card, { CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
-import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 
 const Dashboard = () => {
-  const { flows, setSelectedFlowId, selectedRole, injectAnalysisResult } = usePlatform();
+  const { injectAnalysisResult, selectedRole } = usePlatform();
   const navigate = useNavigate();
 
   // State for drag & drop file upload
@@ -26,9 +23,6 @@ const Dashboard = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [analyzingFile, setAnalyzingFile] = useState(null);
 
-
-
-  // Drag & drop handlers
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -98,7 +92,10 @@ const Dashboard = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ file_id: fileId }),
+        body: JSON.stringify({ 
+          file_id: fileId,
+          persona: selectedRole?.id || 'customer_success'
+        }),
       });
 
       if (!response.ok) {
@@ -110,7 +107,6 @@ const Dashboard = () => {
 
       // 3. Inject response into PlatformContext state
       injectAnalysisResult(result);
-
 
       setUploadedFiles(prev => prev.filter((_, i) => i !== index));
       setAnalyzingFile(null);
@@ -137,7 +133,6 @@ const Dashboard = () => {
 
         injectAnalysisResult(dummyResult);
 
-
         setUploadedFiles(prev => prev.filter((_, i) => i !== index));
         setAnalyzingFile(null);
 
@@ -155,199 +150,195 @@ const Dashboard = () => {
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   };
 
-  // Status mapping
-  const statusDetails = {
-    analyzing: { label: 'Analyzing', variant: 'blue', pulse: true, icon: Loader2 },
-    completed: { label: 'Analysis Complete', variant: 'emerald', pulse: false, icon: CheckCircle2 },
-    failed: { label: 'Parsing Failed', variant: 'red', pulse: false, icon: AlertCircle }
-  };
-
   return (
     <div className="space-y-8">
       {/* Header section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Meeting Intelligence Center</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Upload conversation logs and meeting notes. Autonomic agents parse tasks, ROI models, and check compliance.
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Meeting Ingestion Center</h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Upload client transcripts and decision logs. Autonomous agents orchestrate evaluation pipelines in real-time.
           </p>
         </div>
       </div>
 
       {/* Aggregate Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <Card>
+        <Card hoverable className="border-slate-200/50">
           <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Documents Analyzed</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">14 <span className="text-xs text-slate-400 font-normal">files</span></h3>
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Documents Ingested</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">14 <span className="text-[11px] text-slate-400 font-normal">files</span></h3>
             </div>
-            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg">
-              <FileText className="h-5 w-5" />
+            <div className="p-2 bg-blue-50/80 text-blue-600 rounded-lg border border-blue-100/50">
+              <FileText className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-xs text-slate-500 mt-4 flex items-center gap-1">
-            <span className="text-emerald-600 font-semibold">100% compliance</span>
-            <span>audit logging</span>
+          <div className="text-[11px] text-slate-450 mt-4 flex items-center gap-1.5 border-t border-slate-50 pt-2.5">
+            <span className="text-emerald-600 font-semibold">100% Verified</span>
+            <span>audit logging active</span>
           </div>
         </Card>
 
-        <Card>
+        <Card hoverable className="border-slate-200/50">
           <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Action Items Found</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">28 <span className="text-xs text-slate-400 font-normal">items</span></h3>
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Agents Configured</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">7 <span className="text-[11px] text-slate-400 font-normal">nodes</span></h3>
             </div>
-            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg">
-              <Cpu className="h-5 w-5" />
+            <div className="p-2 bg-indigo-50/80 text-indigo-600 rounded-lg border border-indigo-100/50">
+              <Cpu className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-xs text-slate-500 mt-4 flex items-center gap-1.5">
-            <span className="font-semibold text-blue-600">Avg 4.2 items</span>
-            <span>per document</span>
+          <div className="text-[11px] text-slate-450 mt-4 flex items-center gap-1.5 border-t border-slate-50 pt-2.5">
+            <span className="font-semibold text-indigo-600">Dynamic routing</span>
+            <span>orchestrated</span>
           </div>
         </Card>
 
-        <Card>
+        <Card hoverable className="border-slate-200/50">
           <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Agent Parser Accuracy</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">91.8%</h3>
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Decision Accuracy</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">94.8%</h3>
             </div>
-            <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg">
-              <Sparkles className="h-5 w-5" />
+            <div className="p-2 bg-emerald-50/80 text-emerald-600 rounded-lg border border-emerald-100/50">
+              <Sparkles className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-xs text-slate-500 mt-4 flex items-center gap-1">
+          <div className="text-[11px] text-slate-450 mt-4 flex items-center gap-1.5 border-t border-slate-50 pt-2.5">
             <span className="text-emerald-600 font-bold">↑ +0.4%</span>
-            <span>realignment drift</span>
+            <span>retention stability</span>
           </div>
         </Card>
 
-        <Card>
+        <Card hoverable className="border-slate-200/50">
           <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Operational Cost</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">$2.14</h3>
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estimated Cost</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">$0.18 <span className="text-[11px] text-slate-400 font-normal">/ run</span></h3>
             </div>
-            <div className="p-2.5 bg-slate-50 text-slate-600 rounded-lg">
-              <TrendingUp className="h-5 w-5" />
+            <div className="p-2 bg-slate-50 text-slate-600 rounded-lg border border-slate-100">
+              <TrendingUp className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-xs text-slate-500 mt-4 flex items-center gap-1">
-            <span>LLM tokens billing:</span>
-            <span className="font-semibold text-slate-700">$0.15 / doc</span>
+          <div className="text-[11px] text-slate-450 mt-4 flex items-center gap-1.5 border-t border-slate-50 pt-2.5">
+            <span>LLM optimization</span>
+            <span className="font-semibold text-slate-700">active</span>
           </div>
         </Card>
       </div>
 
-      {/* Document Upload Center */}
+      {/* Document Ingestion Center */}
       <div className="w-full">
-        <Card className="flex flex-col justify-between">
-          <div>
-            <CardHeader className="pb-4">
-              <CardTitle>Notes Ingestion</CardTitle>
-              <CardDescription>Drag and drop text transcripts or audio transcript files to begin parsing.</CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-5">
-              {/* Drag and Drop Zone */}
-              <div 
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
-                onDrop={handleDrop}
-                className={`
-                  border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200 cursor-pointer
-                  ${dragActive 
-                    ? 'border-blue-600 bg-blue-50/30' 
-                    : 'border-slate-200 hover:border-slate-350 hover:bg-slate-50/30'}
-                `}
-              >
-                <input 
-                  type="file" 
-                  id="file-upload-input"
-                  multiple 
-                  onChange={handleFileChange}
-                  className="hidden"
-                  accept=".txt,.doc,.docx,.pdf"
-                />
-                
-                <label htmlFor="file-upload-input" className="cursor-pointer block space-y-3">
-                  <div className="mx-auto w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                    <UploadCloud className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-blue-600 hover:text-blue-700 block">Click to select files</span>
-                    <span className="text-[11px] text-slate-400 block mt-1">or drag & drop them here</span>
-                  </div>
-                  <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block bg-slate-50 py-1 rounded">
-                    TXT, DOCX, PDF (MAX. 10MB)
-                  </span>
-                </label>
-              </div>
-
-              {/* Queue of Staged Files to Analyze */}
-              {uploadedFiles.length > 0 && (
-                <div className="space-y-2.5">
-                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Staged Documents ({uploadedFiles.length})</h4>
-                  <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
-                    {uploadedFiles.map((file, idx) => (
-                      <div key={idx} className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between gap-3 text-xs">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <FileText className="h-4 w-4 text-blue-600 shrink-0" />
-                          <div className="truncate font-semibold text-slate-700" title={file.name}>
-                            {file.name}
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-bold shrink-0">({file.size})</span>
-                        </div>
-                        
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          {analyzingFile === file.name ? (
-                            <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
-                          ) : (
-                            <>
-                              <button 
-                                onClick={() => triggerAnalysis(file, idx)}
-                                className="text-[10px] font-bold px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                disabled={analyzingFile !== null}
-                              >
-                                Analyze
-                              </button>
-                              <button 
-                                onClick={() => removeFile(idx)}
-                                className="text-slate-400 hover:text-red-500 p-0.5"
-                                disabled={analyzingFile !== null}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+        <Card className="border-slate-200/50 shadow-xs">
+          <CardHeader border className="pb-4">
+            <CardTitle>Staged Document Dropzone</CardTitle>
+            <CardDescription>Drag and drop text transcripts or audio transcript files to initiate the agent orchestration sequence.</CardDescription>
+          </CardHeader>
+          
+          <CardContent className="space-y-6 pt-4">
+            {/* Drag and Drop Zone */}
+            <div 
+              onDragEnter={handleDrag}
+              onDragOver={handleDrag}
+              onDragLeave={handleDrag}
+              onDrop={handleDrop}
+              className={`
+                border border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer
+                ${dragActive 
+                  ? 'border-blue-600 bg-blue-50/20' 
+                  : 'border-slate-200 hover:border-slate-350 hover:bg-slate-50/20'}
+              `}
+            >
+              <input 
+                type="file" 
+                id="file-upload-input"
+                multiple 
+                onChange={handleFileChange}
+                className="hidden"
+                accept=".txt,.doc,.docx,.pdf"
+              />
+              
+              <label htmlFor="file-upload-input" className="cursor-pointer block space-y-4">
+                <div className="mx-auto w-12 h-12 rounded-xl bg-blue-50/80 text-blue-600 flex items-center justify-center border border-blue-100/50">
+                  <UploadCloud className="h-6 w-6" />
                 </div>
-              )}
-            </CardContent>
-          </div>
+                <div>
+                  <span className="text-xs font-semibold text-blue-600 hover:text-blue-700 block">Click to select files</span>
+                  <span className="text-[10px] text-slate-400 block mt-1">or drag and drop them here</span>
+                </div>
+                <span className="inline-block text-[9px] text-slate-400 font-bold uppercase tracking-wider bg-slate-50 border border-slate-100 px-3 py-1 rounded-md">
+                  TXT, DOCX, PDF (MAX. 10MB)
+                </span>
+              </label>
+            </div>
 
+            {/* Queue of Staged Files to Analyze */}
+            {uploadedFiles.length > 0 && (
+              <div className="space-y-3 pt-2">
+                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Staged Documents ({uploadedFiles.length})</h4>
+                <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                  {uploadedFiles.map((file, idx) => (
+                    <div key={idx} className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl flex items-center justify-between gap-3 text-xs shadow-xs transition-all duration-200 hover:bg-slate-100/50">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+                        <div className="truncate font-semibold text-slate-700 text-xs" title={file.name}>
+                          {file.name}
+                        </div>
+                        <span className="text-[10px] text-slate-400 shrink-0">({file.size})</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 shrink-0">
+                        {analyzingFile === file.name ? (
+                          <div className="flex items-center gap-1.5 text-blue-600 font-semibold text-[10px]">
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            <span>Orchestrating...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <Button 
+                              onClick={() => triggerAnalysis(file, idx)}
+                              variant="primary"
+                              className="px-3 py-1 text-[10px] h-7"
+                              disabled={analyzingFile !== null}
+                            >
+                              Analyze
+                            </Button>
+                            <button 
+                              onClick={() => removeFile(idx)}
+                              className="text-slate-450 hover:text-red-500 p-1 bg-white border border-slate-200 hover:border-slate-300 rounded-lg transition-all shadow-xs"
+                              disabled={analyzingFile !== null}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
         </Card>
       </div>
 
       {/* Flow Wizard Navigation Banner */}
-      <div className="bg-slate-900 border border-slate-800 text-white rounded-xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-md mt-8">
-        <div>
-          <span className="text-[10px] bg-blue-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Flow Step 3 of 6</span>
-          <h3 className="text-lg font-bold mt-1.5">Dashboard View Complete?</h3>
-          <p className="text-xs text-slate-400">Proceed to the Processing pipeline to monitor active agent logic in real time.</p>
+      <div className="bg-slate-950 border border-slate-900 text-white rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm mt-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 via-transparent to-transparent pointer-events-none" />
+        <div className="relative z-10 space-y-1">
+          <span className="text-[9px] bg-blue-600 border border-blue-500/20 px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider">Ingestion Sequence Complete</span>
+          <h3 className="text-base font-bold mt-1 text-slate-100">Proceed to Agent Pipeline</h3>
+          <p className="text-xs text-slate-400">Launch the multi-agent decision model solver and monitor real-time execution steps.</p>
         </div>
         <Button 
           onClick={() => navigate('/processing')} 
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold shrink-0 flex items-center gap-2"
+          variant="primary"
+          className="shrink-0 flex items-center gap-2 relative z-10 py-2.5"
         >
-          <span>Run Agent Pipeline</span>
-          <ArrowRight className="h-4 w-4" />
+          <span>Open Execution Monitor</span>
+          <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </div>
     </div>

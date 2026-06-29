@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  TrendingUp, 
   Search, 
   Clock, 
   Award, 
@@ -11,9 +10,6 @@ import {
   FileDown,
   RotateCcw,
   Sparkles,
-  ShieldCheck,
-  ChevronRight,
-  Database,
   Loader2
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
@@ -22,10 +18,10 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 
 const Evaluation = () => {
-  const { logout, selectedFlow, selectedRole } = usePlatform();
   const navigate = useNavigate();
+  const { logout, selectedFlow, selectedRole } = usePlatform();
   const [searchQuery, setSearchQuery] = useState('');
-  const [impactFilter, setImpactFilter] = useState('all');
+  const [impactFilter, setImpactFilter] = useState('all'); // 'all', 'high', 'medium', 'low'
   const [isExporting, setIsExporting] = useState(false);
   const [exportMessage, setExportMessage] = useState(null);
 
@@ -155,26 +151,32 @@ const Evaluation = () => {
       {/* Title Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Platform Evaluation Summary</h1>
-          <p className="text-sm text-slate-500">Post-execution audit report measuring recommendation latency, model confidence, and ROI impact.</p>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50/80 border border-blue-150 px-2 py-0.5 rounded-md">
+              Audit Office
+            </span>
+            <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Step 6 of 6</span>
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight mt-1.5">Platform Evaluation Summary</h1>
+          <p className="text-xs text-slate-550 mt-1">Post-execution audit report measuring recommendation latency, model confidence, and ROI impact.</p>
         </div>
         <Button 
           onClick={handleExportAudit}
           disabled={isExporting}
           variant="outline" 
-          className="flex items-center gap-2 bg-white border-slate-200"
+          className="flex items-center gap-2 bg-white border-slate-200 shadow-xs h-9 text-xs py-1.5 px-3"
         >
           {isExporting ? (
-            <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 text-blue-500 animate-spin" />
           ) : (
-            <FileDown className="h-4 w-4 text-slate-500" />
+            <FileDown className="h-3.5 w-3.5 text-slate-500" />
           )}
           <span>{isExporting ? 'Generating PDF...' : 'Export Audit Summary'}</span>
         </Button>
       </div>
 
       {exportMessage && (
-        <div className={`p-3.5 rounded-xl border text-xs flex items-center gap-2 shadow-xs transition-all duration-300 ${
+        <div className={`p-3 rounded-xl border text-xs flex items-center gap-2 shadow-xs transition-all duration-300 ${
           exportMessage.type === 'success' 
             ? 'bg-emerald-50/70 border-emerald-100 text-emerald-950 font-semibold' 
             : 'bg-red-50/70 border-red-100 text-red-950 font-semibold'
@@ -192,51 +194,51 @@ const Evaluation = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         
         {/* KPI 1: Recommendation Time */}
-        <Card>
+        <Card hoverable className="border-slate-200/50">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Avg Recommendation Time</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">0.43s</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Avg Latency Speed</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">0.43s</h3>
             </div>
-            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg">
-              <Clock className="h-5 w-5" />
+            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg border border-blue-100/50">
+              <Clock className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-xs text-slate-550 mt-4 flex items-center gap-1">
+          <div className="text-[11px] text-slate-450 mt-4 flex items-center gap-1.5 border-t border-slate-50 pt-2.5">
             <span className="text-emerald-600 font-bold">↑ 92% faster</span>
-            <span>than manual reviews</span>
+            <span>than manual operations</span>
           </div>
         </Card>
 
         {/* KPI 2: Confidence */}
-        <Card>
+        <Card hoverable className="border-slate-200/50">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Avg Solver Confidence</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">91.8%</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Avg Solver Confidence</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">91.8%</h3>
             </div>
-            <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg">
-              <Sparkles className="h-5 w-5" />
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg border border-indigo-100/50">
+              <Sparkles className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-xs text-slate-550 mt-4 flex items-center gap-1">
-            <span className="text-emerald-600 font-bold">96.4% accuracy</span>
+          <div className="text-[11px] text-slate-450 mt-4 flex items-center gap-1.5 border-t border-slate-50 pt-2.5">
+            <span className="text-emerald-600 font-bold">96.4% success</span>
             <span>realization profile</span>
           </div>
         </Card>
 
         {/* KPI 3: Decision Realization */}
-        <Card>
+        <Card hoverable className="border-slate-200/50">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Decision Adoption Rate</p>
-              <h3 className="text-3xl font-extrabold text-slate-900 mt-2">92.0%</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Adoption Release Rate</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">92.0%</h3>
             </div>
-            <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg">
-              <Award className="h-5 w-5" />
+            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100/50">
+              <Award className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-xs text-slate-550 mt-4 flex items-center gap-1">
+          <div className="text-[11px] text-slate-450 mt-4 flex items-center gap-1.5 border-t border-slate-50 pt-2.5">
             <span className="text-slate-650 font-semibold">8.0% overridden</span>
             <span>by administration</span>
           </div>
@@ -244,8 +246,8 @@ const Evaluation = () => {
       </div>
 
       {/* Main Grid: Historical Decisions Summary Table */}
-      <Card>
-        <CardHeader className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 pb-5 border-b border-slate-100">
+      <Card className="border-slate-200/50 shadow-xs">
+        <CardHeader className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 pb-4" border>
           <div>
             <CardTitle>Historical Decisions Registry</CardTitle>
             <CardDescription>Audited trace records comparing recommendation speed, solver confidence, and expected impact metrics.</CardDescription>
@@ -254,20 +256,20 @@ const Evaluation = () => {
           {/* Filters */}
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div className="relative flex-1 md:flex-none">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
               <input
                 type="text"
-                placeholder="Search decision details..."
+                placeholder="Search decision registry..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="text-xs pl-9 pr-3 py-1.75 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-400 w-full md:w-48"
+                className="text-xs pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-405 w-full md:w-48 shadow-inner"
               />
             </div>
             
             <select
               value={impactFilter}
               onChange={(e) => setImpactFilter(e.target.value)}
-              className="text-xs font-semibold px-2 py-1.75 bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="text-xs font-semibold px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-xs"
             >
               <option value="all">All Impacts</option>
               <option value="high">High Impact</option>
@@ -281,19 +283,19 @@ const Evaluation = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-100">
+                <tr className="bg-slate-50/70 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-100">
                   <th className="px-6 py-3.5">Audit ID</th>
-                  <th className="px-4 py-3.5">Decision Path Details</th>
-                  <th className="px-4 py-3.5">Rec. Time</th>
+                  <th className="px-4 py-3.5">Decision Details</th>
+                  <th className="px-4 py-3.5">Latency</th>
                   <th className="px-4 py-3.5">Confidence</th>
-                  <th className="px-4 py-3.5">Expected Business Impact</th>
-                  <th className="px-6 py-3.5 text-right">Review Status</th>
+                  <th className="px-4 py-3.5">Expected Impact</th>
+                  <th className="px-6 py-3.5 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-slate-100 text-xs text-slate-650">
                 {filteredDecisions.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-8 text-center text-slate-400 text-xs italic">
+                    <td colSpan="6" className="px-6 py-8 text-center text-slate-405 italic">
                       No matching historical records found.
                     </td>
                   </tr>
@@ -306,26 +308,26 @@ const Evaluation = () => {
                       </td>
 
                       {/* Decision Details */}
-                      <td className="px-4 py-4.5 font-bold text-slate-900">
+                      <td className="px-4 py-4.5 font-bold text-slate-900 text-xs">
                         {item.decision}
-                        <div className="text-[10px] text-slate-400 font-semibold mt-0.5 flex items-center gap-1.5">
+                        <div className="text-[10px] text-slate-400 font-semibold mt-1 flex items-center gap-1.5">
                           <Calendar className="h-3 w-3" />
                           <span>Audited on {item.date}</span>
                         </div>
                       </td>
 
-                      {/* Recommendation Time */}
-                      <td className="px-4 py-4.5 text-xs text-slate-650 font-bold font-mono">
+                      {/* Latency */}
+                      <td className="px-4 py-4.5 font-bold font-mono">
                         {item.recTime}
                       </td>
 
                       {/* Confidence */}
-                      <td className="px-4 py-4.5 text-xs font-bold text-blue-600 font-mono">
+                      <td className="px-4 py-4.5 font-bold text-blue-600 font-mono">
                         {item.confidence}
                       </td>
 
                       {/* Expected Impact */}
-                      <td className="px-4 py-4.5 text-xs font-semibold text-slate-700">
+                      <td className="px-4 py-4.5 font-semibold text-slate-700">
                         {item.impact}
                       </td>
 
@@ -333,13 +335,14 @@ const Evaluation = () => {
                       <td className="px-6 py-4.5 text-right">
                         <Badge 
                           variant={item.status === 'approved' ? 'emerald' : 'red'}
+                          className="px-2 py-0.5 rounded-md"
                         >
                           {item.status === 'approved' ? (
                             <CheckCircle2 className="h-3 w-3 text-emerald-600" />
                           ) : (
                             <AlertCircle className="h-3 w-3 text-red-650" />
                           )}
-                          <span className="capitalize">{item.status}</span>
+                          <span>{item.status}</span>
                         </Badge>
                       </td>
                     </tr>
@@ -352,21 +355,23 @@ const Evaluation = () => {
       </Card>
 
       {/* Flow Wizard Navigation Banner */}
-      <div className="bg-slate-900 border border-slate-800 text-white rounded-xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-md mt-8">
-        <div>
-          <span className="text-[10px] bg-blue-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Flow Step 6 of 6</span>
-          <h3 className="text-lg font-bold mt-1.5">End of Demo Flow</h3>
-          <p className="text-xs text-slate-400">You have completed the entire decision lifecycle. You can restart the loop or switch personas.</p>
+      <div className="bg-slate-950 border border-slate-900 text-white rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm mt-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 via-transparent to-transparent pointer-events-none" />
+        <div className="relative z-10 space-y-1">
+          <span className="text-[9px] bg-blue-600 border border-blue-500/20 px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider">Flow Step 6 of 6</span>
+          <h3 className="text-base font-bold mt-1 text-slate-100">Decision Lifecycle Terminated</h3>
+          <p className="text-xs text-slate-400">You have completed the entire audit cycle. You can restart the simulation workflow or shift personas.</p>
         </div>
         <Button 
           onClick={() => {
             logout();
             navigate('/login');
           }} 
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold shrink-0 flex items-center gap-2"
+          variant="primary"
+          className="shrink-0 flex items-center gap-2 relative z-10 py-2.5"
         >
-          <span>Restart Demo (Logout)</span>
-          <RotateCcw className="h-4 w-4" />
+          <span>Restart Session</span>
+          <RotateCcw className="h-3.5 w-3.5" />
         </Button>
       </div>
     </div>

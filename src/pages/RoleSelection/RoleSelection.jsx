@@ -45,25 +45,25 @@ const RoleSelection = () => {
   const colors = {
     blue: {
       border: 'hover:border-blue-500/80',
-      bg: 'bg-blue-500/10 text-blue-600',
+      bg: 'bg-blue-50/10 text-blue-600',
       text: 'text-blue-700',
       pill: 'bg-blue-500'
     },
     indigo: {
       border: 'hover:border-indigo-500/80',
-      bg: 'bg-indigo-500/10 text-indigo-600',
+      bg: 'bg-indigo-50/10 text-indigo-600',
       text: 'text-indigo-700',
       pill: 'bg-indigo-500'
     },
     sky: {
       border: 'hover:border-sky-500/80',
-      bg: 'bg-sky-500/10 text-sky-600',
+      bg: 'bg-sky-50/10 text-sky-600',
       text: 'text-sky-700',
       pill: 'bg-sky-500'
     },
     slate: {
       border: 'hover:border-slate-500/80',
-      bg: 'bg-slate-500/10 text-slate-600',
+      bg: 'bg-slate-50/10 text-slate-600',
       text: 'text-slate-700',
       pill: 'bg-slate-500'
     }

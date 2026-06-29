@@ -3,18 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Check, 
   X, 
-  ShieldCheck, 
-  AlertTriangle, 
   ChevronRight,
-  TrendingUp,
-  HelpCircle,
   ThumbsUp,
   ThumbsDown,
   Info,
-  Calendar
+  Building,
+  DollarSign,
+  User,
+  RotateCcw,
+  ArrowRight
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
-import Card, { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/Card';
+import Card, { CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 
@@ -56,7 +56,7 @@ const Results = () => {
     industry: 'Advanced Logistics & Manufacturing',
     value: '$2.4M Annual Contract Value',
     owner: 'Sarah Jenkins',
-    healthScore: 84, // 84/100
+    healthScore: 84,
     riskLevel: 'Medium-High',
     confidenceScore: 92,
     explanation: 'The risk model detected a 24% spike in European maritime tariffs coupled with labor union strikes at the Antwerp port. In order to safeguard Acme\'s Q3 supply schedules without exceeding budgetary guidelines, the solver calculated that a multi-channel rerouting strategy via Mediterranean ports yields the lowest disruption profile while keeping cost margins under the 5% threshold.',
@@ -127,21 +127,21 @@ const Results = () => {
     } else if (typeof rawExplanation === 'string') {
       try {
         explanation = JSON.parse(rawExplanation);
-      } catch (e) {
+      } catch {
         // Fallback string
       }
     }
 
     if (explanation && typeof explanation === 'object') {
       return (
-        <div className="space-y-5 text-slate-650 text-xs leading-relaxed font-sans">
+        <div className="space-y-6 text-xs leading-relaxed font-sans text-slate-600">
           {explanation.meeting_evidence && explanation.meeting_evidence.length > 0 && (
-            <div className="border-b border-slate-100 pb-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <div className="border-b border-slate-100 pb-4">
+              <h4 className="font-bold text-slate-900 text-[10px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
                 Meeting Evidence
               </h4>
-              <ul className="list-disc pl-5 space-y-1 text-slate-600">
+              <ul className="list-disc pl-5 space-y-1.5 text-slate-550">
                 {explanation.meeting_evidence.map((item, idx) => (
                   <li key={idx}>{item}</li>
                 ))}
@@ -150,14 +150,14 @@ const Results = () => {
           )}
 
           {explanation.risks && explanation.risks.length > 0 && (
-            <div className="border-b border-slate-100 pb-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <div className="border-b border-slate-100 pb-4">
+              <h4 className="font-bold text-slate-900 text-[10px] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
                 Detected Risks
               </h4>
               <div className="flex flex-wrap gap-2">
                 {explanation.risks.map((risk, idx) => (
-                  <Badge key={idx} variant="red" className="text-[10px] font-semibold">
+                  <Badge key={idx} variant="red" className="text-[9.5px]">
                     {risk}
                   </Badge>
                 ))}
@@ -166,32 +166,32 @@ const Results = () => {
           )}
 
           {explanation.reasoning && (
-            <div className="border-b border-slate-100 pb-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <div className="border-b border-slate-100 pb-4">
+              <h4 className="font-bold text-slate-900 text-[10px] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
                 Reasoning
               </h4>
-              <p className="text-slate-600 leading-relaxed pr-2">{explanation.reasoning}</p>
+              <p className="text-slate-550 leading-relaxed pr-2">{explanation.reasoning}</p>
             </div>
           )}
 
           {explanation.why_this_recommendation && (
-            <div className="border-b border-slate-100 pb-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <div className="border-b border-slate-100 pb-4">
+              <h4 className="font-bold text-slate-900 text-[10px] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
                 Why this Recommendation
               </h4>
-              <p className="text-slate-600 leading-relaxed pr-2">{explanation.why_this_recommendation}</p>
+              <p className="text-slate-550 leading-relaxed pr-2">{explanation.why_this_recommendation}</p>
             </div>
           )}
 
           {explanation.business_impact && explanation.business_impact.length > 0 && (
-            <div className="border-b border-slate-100 pb-3">
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <div className="border-b border-slate-100 pb-4">
+              <h4 className="font-bold text-slate-900 text-[10px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
                 Expected Business Impact
               </h4>
-              <ul className="list-disc pl-5 space-y-1 text-slate-600">
+              <ul className="list-disc pl-5 space-y-1.5 text-slate-550">
                 {explanation.business_impact.map((item, idx) => (
                   <li key={idx}>{item}</li>
                 ))}
@@ -201,13 +201,13 @@ const Results = () => {
 
           {explanation.sources && explanation.sources.length > 0 && (
             <div>
-              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <h4 className="font-bold text-slate-900 text-[10px] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
                 Evidence Sources
               </h4>
               <div className="flex flex-wrap gap-2">
                 {explanation.sources.map((source, idx) => (
-                  <span key={idx} className="px-2 py-0.5 text-[10px] bg-slate-100 border border-slate-200 text-slate-600 rounded font-semibold">
+                  <span key={idx} className="px-2 py-1 text-[9.5px] bg-slate-50 border border-slate-200 text-slate-650 rounded-md font-semibold shadow-xs">
                     {source}
                   </span>
                 ))}
@@ -219,8 +219,8 @@ const Results = () => {
     }
 
     return (
-      <div className="p-4.5 bg-slate-50 border border-slate-200/60 rounded-xl text-xs leading-relaxed text-slate-600 font-sans relative">
-        <Info className="absolute right-4 top-4 h-5 w-5 text-slate-300" />
+      <div className="p-4 bg-slate-50 border border-slate-200/50 rounded-xl text-xs leading-relaxed text-slate-550 font-sans relative">
+        <Info className="absolute right-4 top-4 h-4 w-4 text-slate-350" />
         <p className="pr-6">{rawExplanation}</p>
       </div>
     );
@@ -232,17 +232,18 @@ const Results = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-blue-600 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider bg-blue-50/80 border border-blue-150 px-2 py-0.5 rounded-md">
               Auditor Output
             </span>
-            <span className="text-xs text-slate-400">Step 5 of 6</span>
+            <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Step 5 of 6</span>
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">Optimization Analysis Results</h1>
-          <p className="text-sm text-slate-500">Review optimization decisions compiled for account reviews.</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight mt-1.5">Optimization Analysis Results</h1>
+          <p className="text-xs text-slate-500 mt-1">Review optimization decisions compiled for account reviews.</p>
         </div>
 
         {decisionState !== 'pending' && (
-          <Button onClick={handleReset} variant="outline" className="text-xs bg-white py-1.5 px-3 flex items-center gap-1.5 border-slate-200">
+          <Button onClick={handleReset} variant="outline" className="text-xs bg-white py-1.5 px-3 flex items-center gap-1.5 border-slate-200 shadow-xs h-9">
+            <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
             <span>Reset Decision State</span>
           </Button>
         )}
@@ -254,35 +255,73 @@ const Results = () => {
         {/* Left Columns (2/3) - Customer Details, Top 3 Recommendations, Narrative Explanation */}
         <div className="lg:col-span-2 space-y-6">
           
+          {/* Card 1: Account Context Details */}
+          <Card className="border-slate-200/50 shadow-xs">
+            <CardHeader className="pb-3" border>
+              <CardTitle>Account Context & Parameters</CardTitle>
+              <CardDescription>Enterprise details synced with central accounts database.</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div className="flex items-center gap-2.5 p-3 bg-slate-50 border border-slate-200/60 rounded-xl">
+                <Building className="h-4.5 w-4.5 text-blue-500 shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Enterprise Account</span>
+                  <span className="font-bold text-slate-800 truncate block mt-0.5" title={selectedFlow?.meetingNotes?.company || customerData.name}>
+                    {selectedFlow?.meetingNotes?.company || customerData.name}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 p-3 bg-slate-50 border border-slate-200/60 rounded-xl">
+                <DollarSign className="h-4.5 w-4.5 text-indigo-500 shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Contract Valuation</span>
+                  <span className="font-bold text-slate-800 truncate block mt-0.5">
+                    {selectedFlow?.customerSummary?.contract_value || customerData.value}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 p-3 bg-slate-50 border border-slate-200/60 rounded-xl">
+                <User className="h-4.5 w-4.5 text-emerald-500 shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Account Director</span>
+                  <span className="font-bold text-slate-800 truncate block mt-0.5">
+                    {selectedFlow?.initiator || customerData.owner}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Card 2: Top 3 Recommendations */}
-          <Card>
-            <CardHeader className="pb-4">
+          <Card className="border-slate-200/50 shadow-xs">
+            <CardHeader className="pb-3" border>
               <CardTitle>Top 3 Strategic Recommendations</CardTitle>
               <CardDescription>Optimized adjustments calculated to mitigate logistical risk events.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3.5 pt-4">
               {recommendationsList.map((rec) => (
                 <div 
                   key={rec.id} 
-                  className="p-4 bg-white border border-slate-200/80 rounded-xl shadow-xs hover:border-slate-300 transition-colors flex gap-4"
+                  className="p-4 bg-white border border-slate-200/60 hover:border-slate-350 rounded-xl shadow-xs transition-all duration-200 flex gap-4"
                 >
                   {/* Step ID badge */}
-                  <div className="h-7 w-7 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                  <div className="h-6 w-6 rounded-full bg-blue-50/80 text-blue-600 border border-blue-100 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">
                     {rec.id}
                   </div>
                   {/* Content details */}
                   <div className="flex-1 space-y-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h4 className="text-sm font-bold text-slate-900">{rec.title}</h4>
+                      <h4 className="text-xs font-bold text-slate-900">{rec.title}</h4>
                       <div className="flex gap-1.5">
                         <Badge variant={rec.badgeColor}>{rec.impact}</Badge>
-                        <span className="px-2 py-0.5 text-[10px] font-semibold bg-slate-100 text-slate-600 rounded">
+                        <span className="px-2 py-0.5 text-[9px] font-semibold bg-slate-50 text-slate-500 border border-slate-200 rounded">
                           {rec.cost}
                         </span>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-550 leading-relaxed">{rec.description}</p>
+                    <p className="text-[11px] text-slate-500 leading-normal">{rec.description}</p>
                   </div>
                 </div>
               ))}
@@ -290,167 +329,170 @@ const Results = () => {
           </Card>
 
           {/* Card 3: Narrative Explanation */}
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle>Decision Justification Explanation</CardTitle>
-              <CardDescription>Auditable explanation detailing the model constraint variables checked.</CardDescription>
+          <Card className="border-slate-200/50 shadow-xs">
+            <CardHeader className="pb-3" border>
+              <CardTitle>Orchestrator Inferences & Narrative Reasoning</CardTitle>
+              <CardDescription>Narrative report justification explaining target decisions and data evidence.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="pt-4">
               {getExplanationContent()}
             </CardContent>
           </Card>
 
         </div>
 
-        {/* Right Column (1/3) - Confidence Score, Risk Level, Accept/Reject Action Controls */}
-        <div className="space-y-6">
-          
-          {/* Card 4: Assessment Metrics (Confidence & Risk) */}
-          <Card className="text-center">
-            <CardHeader className="pb-2">
-              <CardTitle>Analysis Assessment</CardTitle>
-              <CardDescription>Reliability rating and impact variance scores.</CardDescription>
+        {/* Right Column (1/3) - Decision Authorization Control Center */}
+        <div className="lg:col-span-1 space-y-6">
+          <Card className="border-slate-200/50 shadow-xs sticky top-6">
+            <CardHeader className="pb-4" border>
+              <CardTitle>Decision Authorization Hub</CardTitle>
+              <CardDescription>Human-in-the-loop audit check controls to authorize optimization execution.</CardDescription>
             </CardHeader>
-            <CardContent className="p-6 flex flex-col items-center space-y-6">
-              {/* Confidence Score Big Circle */}
-              <div className="h-28 w-28 relative flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle cx="56" cy="56" r="48" className="stroke-slate-100 stroke-8 fill-none" />
-                  <circle cx="56" cy="56" r="48" className="stroke-blue-600 stroke-8 fill-none" strokeDasharray="300" strokeDashoffset={300 - (300 * confidenceScore) / 100} />
-                </svg>
-                <div className="absolute text-center">
-                  <span className="text-3xl font-black text-slate-900 leading-none">{confidenceScore}%</span>
-                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Confidence</span>
+            
+            <CardContent className="space-y-6 pt-4 text-xs">
+              
+              {/* Confidence metrics */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <span>Inference Confidence</span>
+                  <span className="text-slate-800 font-extrabold">{confidenceScore}%</span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div 
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-500 ease-out" 
+                    style={{ width: `${confidenceScore}%` }}
+                  ></div>
                 </div>
               </div>
 
-              {/* Risk Level Badge */}
-              <div className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between text-left">
-                <div>
-                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Risk Level</span>
-                  <span className="text-sm font-bold text-slate-850 block mt-0.5">{riskLevel === 'High' ? 'High Risk Profile' : riskLevel === 'Low' ? 'Low Risk Profile' : 'Medium Risk Profile'}</span>
-                </div>
-                <Badge variant={riskLevel === 'High' ? 'red' : riskLevel === 'Low' ? 'emerald' : 'amber'} className="flex items-center gap-1">
-                  <AlertTriangle className="h-3 w-3" />
-                  <span>{riskLevel}</span>
+              {/* Risk Level pill */}
+              <div className="flex justify-between items-center py-2 px-3 bg-slate-50 border border-slate-200/60 rounded-xl">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Risk Evaluation Profile</span>
+                <Badge variant={riskLevel?.toLowerCase().includes('high') ? 'red' : 'amber'}>
+                  {riskLevel} Risk
                 </Badge>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* Card 5: Action Authorization (Accept / Reject) */}
-          <Card className={`transition-all duration-300 border-2 ${
-            decisionState === 'accepted' 
-              ? 'border-emerald-500 bg-emerald-50/5' 
-              : decisionState === 'rejected' 
-                ? 'border-red-500 bg-red-50/5' 
-                : 'border-slate-200'
-          }`}>
-            <CardHeader className="pb-3 border-b border-slate-100">
-              <CardTitle>Decision Authorization</CardTitle>
-              <CardDescription>Commit decision recommendations to execution loop.</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
+              {/* Dynamic state check */}
               {decisionState === 'pending' ? (
-                <div className="space-y-4">
-                  {!showRejectForm ? (
-                    <div className="flex flex-col gap-3">
-                      <Button 
-                        onClick={handleAccept}
-                        variant="success" 
-                        className="w-full py-3 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
-                      >
-                        <ThumbsUp className="h-4 w-4" />
-                        <span>Accept Recommendation</span>
-                      </Button>
-                      
-                      <Button 
-                        onClick={() => setShowRejectForm(true)}
-                        variant="outline" 
-                        className="w-full py-3 flex items-center justify-center gap-2 bg-white text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-200 border-slate-200 font-bold"
-                      >
-                        <ThumbsDown className="h-4 w-4" />
-                        <span>Reject Strategy</span>
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-3.5">
+                <div className="space-y-3.5">
+                  <div className="text-center p-3 bg-blue-50/50 border border-blue-100 rounded-xl">
+                    <span className="text-[11px] text-blue-700 font-semibold block">Awaiting Manual Verification</span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">Operator signature required for release.</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3.5">
+                    <Button 
+                      onClick={() => setShowRejectForm(true)} 
+                      variant="outline"
+                      className="border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 flex items-center gap-1.5 h-10 shadow-xs text-slate-650"
+                    >
+                      <ThumbsDown className="h-3.5 w-3.5" />
+                      <span>Reject Route</span>
+                    </Button>
+                    <Button 
+                      onClick={handleAccept} 
+                      variant="success"
+                      className="flex items-center gap-1.5 h-10 shadow-xs"
+                    >
+                      <ThumbsUp className="h-3.5 w-3.5" />
+                      <span>Authorize</span>
+                    </Button>
+                  </div>
+
+                  {/* Slide down reject input form */}
+                  {showRejectForm && (
+                    <div className="space-y-3 p-3.5 bg-slate-50 border border-slate-200/60 rounded-xl transition-all duration-300">
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                          Reason for Rejection
+                        <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                          Audit Rejection Comment
                         </label>
                         <textarea
                           value={rejectReason}
                           onChange={(e) => setRejectReason(e.target.value)}
-                          placeholder="Provide audit justification details (e.g. Budget variance, override parameters)..."
-                          className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-red-550 text-slate-800 placeholder-slate-400 min-h-[90px]"
-                          required
+                          placeholder="e.g. Budget margins exceeded, recalculate with spot hedges."
+                          className="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 placeholder-slate-400 shadow-inner resize-none h-20"
                         />
                       </div>
-                      
-                      <div className="flex gap-2">
+                      <div className="flex justify-end gap-2">
                         <Button 
-                          onClick={() => {
-                            setShowRejectForm(false);
-                            setRejectReason('');
-                          }} 
-                          variant="ghost" 
-                          className="flex-1 py-2 text-xs"
+                          onClick={() => setShowRejectForm(false)} 
+                          variant="ghost"
+                          className="px-2.5 py-1 text-[10px]"
                         >
                           Cancel
                         </Button>
                         <Button 
                           onClick={handleReject} 
-                          variant="danger" 
-                          className="flex-1 py-2 text-xs bg-red-650 hover:bg-red-750 text-white"
+                          variant="danger"
+                          className="px-3 py-1 text-[10px]"
                         >
-                          Reject
+                          Submit Rejection
                         </Button>
                       </div>
                     </div>
                   )}
                 </div>
               ) : decisionState === 'accepted' ? (
-                <div className="text-center p-4 space-y-4">
-                  <div className="mx-auto h-12 w-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                    <Check className="h-6 w-6 stroke-3" />
+                <div className="space-y-3">
+                  <div className="p-4 bg-emerald-50/55 border border-emerald-250 text-emerald-800 rounded-xl flex items-start gap-3">
+                    <Check className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-xs font-bold block text-emerald-950">Recommendations Released</span>
+                      <span className="text-[11px] text-emerald-650 block mt-0.5 leading-relaxed">The optimized parameters have been committed and released to active shipments.</span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-sm font-extrabold text-slate-900">Pathway Accepted</h4>
-                    <p className="text-xs text-slate-400 mt-1">Recommendations committed. Triggering outbound execution triggers.</p>
-                  </div>
+                  <Button 
+                    onClick={() => navigate('/evaluation')} 
+                    variant="primary"
+                    className="w-full flex items-center justify-center gap-1.5 h-10"
+                  >
+                    <span>View Performance Audit</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
               ) : (
-                <div className="text-center p-4 space-y-4">
-                  <div className="mx-auto h-12 w-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
-                    <X className="h-6 w-6 stroke-3" />
+                <div className="space-y-3">
+                  <div className="p-4 bg-red-50/55 border border-red-250 text-red-800 rounded-xl flex items-start gap-3">
+                    <X className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-xs font-bold block text-red-950">Decision Rejected</span>
+                      <span className="text-[11px] text-red-650 block mt-0.5 leading-relaxed">
+                        Rejection logged. Rerouting model parameters sent back to Planner agent for correction.
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-sm font-extrabold text-slate-900">Pathway Rejected</h4>
-                    <p className="text-xs text-slate-400 mt-1">Audit log updated. Rejection reason recorded.</p>
-                  </div>
+                  <Button 
+                    onClick={() => navigate('/dashboard')} 
+                    variant="outline"
+                    className="w-full flex items-center justify-center gap-1.5 h-10 border-slate-200 text-slate-700 bg-white"
+                  >
+                    <span>Re-upload Ingestion Notes</span>
+                  </Button>
                 </div>
               )}
+
             </CardContent>
           </Card>
-
         </div>
 
       </div>
 
       {/* Flow Wizard Navigation Banner */}
-      <div className="bg-slate-900 border border-slate-800 text-white rounded-xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-md mt-8">
-        <div>
-          <span className="text-[10px] bg-blue-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Flow Step 5 of 6</span>
-          <h3 className="text-lg font-bold mt-1.5">Decision Finalized?</h3>
-          <p className="text-xs text-slate-400">After reviewing or authorizing, proceed to the Evaluation Summary to audit outcomes and savings.</p>
+      <div className="bg-slate-950 border border-slate-900 text-white rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-sm mt-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 via-transparent to-transparent pointer-events-none" />
+        <div className="relative z-10 space-y-1">
+          <span className="text-[9px] bg-blue-600 border border-blue-500/20 px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider">Flow Step 5 of 6</span>
+          <h3 className="text-base font-bold mt-1 text-slate-100">Review Inferences Complete?</h3>
+          <p className="text-xs text-slate-400">Proceed to the Evaluation summary dashboard to run simulations and audit cumulative KPI savings.</p>
         </div>
         <Button 
           onClick={() => navigate('/evaluation')} 
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold shrink-0 flex items-center gap-2"
+          variant="primary"
+          className="shrink-0 flex items-center gap-2 relative z-10 py-2.5"
         >
-          <span>Evaluation Summary</span>
-          <ChevronRight className="h-4 w-4" />
+          <span>Open Evaluation Summary</span>
+          <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </div>
     </div>
