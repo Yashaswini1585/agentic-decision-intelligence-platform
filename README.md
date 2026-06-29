@@ -1,8 +1,24 @@
-# Agentic Decision Intelligence Platform
+## Team Details
 
+**Team Name:** Agentic Decision Intelligence Platform
+
+### Team Members
+
+- Kankanala Anushna
+- Yashaswini
+- Siri Chandhana
+
+---
 ## Overview
 
 The **Agentic Decision Intelligence Platform** is an AI-powered web application that helps businesses make intelligent decisions by analyzing customer information, business documents, CRM data, and meeting notes. The platform leverages multiple AI agents to process inputs, generate recommendations, perform business analysis, and provide explainable insights through an interactive dashboard.
+
+---
+## GitHub Repository
+
+Repository Link:
+
+https://github.com/Yashaswini1585/agentic-decision-intelligence-platform
 
 ---
 
@@ -130,7 +146,7 @@ agentic-decision-intelligence-platform
 
 ---
 
-# Prerequisites
+## Prerequisites
 
 Before running the project, install the following software:
 
@@ -151,7 +167,7 @@ npm -v
 
 ---
 
-# Clone the Repository
+## Clone the Repository
 
 ```bash
 git clone https://github.com/Yashaswini1585/agentic-decision-intelligence-platform.git
@@ -160,7 +176,7 @@ cd agentic-decision-intelligence-platform
 
 ---
 
-# Backend Setup
+## Backend Setup
 
 ## Step 1: Navigate to the Backend Folder
 
@@ -240,7 +256,7 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# Frontend Setup
+## Frontend Setup
 
 Open a new terminal.
 
@@ -270,7 +286,7 @@ http://localhost:5173
 
 ---
 
-# Running the Complete Application
+## Running the Complete Application
 
 ### Terminal 1 – Backend
 
@@ -309,7 +325,7 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# Troubleshooting
+## Troubleshooting
 
 ### Backend dependencies not installed
 
@@ -354,7 +370,7 @@ Windows
 
 ---
 
-# Future Enhancements
+## Future Enhancements
 
 - Authentication and Authorization
 - Role-Based Access Control
@@ -365,4 +381,12 @@ Windows
 - Multi-Database Support
 
 ---
+
+## Additional Notes
+
+- This project demonstrates an enterprise-grade Agentic AI platform for intelligent business decision support.
+- The current implementation focuses on SaaS Customer Success and Sales Management workflows.
+- The Planner Agent dynamically selects the required AI agents based on business context.
+- Human-in-the-loop approval ensures transparency and governance before recommendations are finalized.
+- The platform is designed to be reusable and can be extended to domains such as Healthcare, Finance, HR, and Supply Chain.
 
