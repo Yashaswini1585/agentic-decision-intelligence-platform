@@ -1,16 +1,293 @@
-# React + Vite
+# Agentic Decision Intelligence Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Overview
 
-Currently, two official plugins are available:
+The **Agentic Decision Intelligence Platform** is an AI-powered web application that helps businesses make intelligent decisions by analyzing customer information, business documents, CRM data, and meeting notes. The platform leverages multiple AI agents to process inputs, generate recommendations, perform business analysis, and provide explainable insights through an interactive dashboard.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Multi-Agent AI Architecture
+- Intelligent Business Analysis
+- CRM Data Integration
+- Knowledge Base Search
+- Memory-Based Recommendations
+- AI-Powered Decision Support
+- Explainable Recommendations
+- Modern Responsive Dashboard
+- FastAPI Backend
+- MongoDB Database Integration
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Tech Stack
+
+### Frontend
+- React.js
+- Vite
+- JavaScript
+- CSS
+
+### Backend
+- FastAPI
+- Python
+
+### Database
+- MongoDB
+
+### Development Tools
+- Git
+- GitHub
+- VS Code
+
+---
+
+## Project Structure
+
+```
+agentic-decision-intelligence-platform
+│
+├── backend/
+│   ├── app/
+│   ├── requirements.txt
+│   └── README.md
+│
+├── public/
+│
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── routes/
+│   └── assets/
+│
+├── package.json
+├── package-lock.json
+├── vite.config.js
+└── README.md
+```
+
+---
+
+# Prerequisites
+
+Before running the project, install the following software:
+
+- Git
+- Python 3.10 or later
+- Node.js (v18 or later recommended)
+- npm
+- MongoDB
+
+Verify the installation:
+
+```bash
+git --version
+python3 --version
+node -v
+npm -v
+```
+
+---
+
+# Clone the Repository
+
+```bash
+git clone https://github.com/Yashaswini1585/agentic-decision-intelligence-platform.git
+cd agentic-decision-intelligence-platform
+```
+
+---
+
+# Backend Setup
+
+## Step 1: Navigate to the Backend Folder
+
+```bash
+cd backend
+```
+
+## Step 2: Create a Virtual Environment
+
+### macOS / Linux
+
+```bash
+python3 -m venv .venv
+```
+
+### Windows
+
+```bash
+python -m venv .venv
+```
+
+---
+
+## Step 3: Activate the Virtual Environment
+
+### macOS / Linux
+
+```bash
+source .venv/bin/activate
+```
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+---
+
+## Step 4: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Step 5: Start MongoDB
+
+Make sure MongoDB is running locally.
+
+Default MongoDB connection:
+
+```
+mongodb://localhost:27017
+```
+
+---
+
+## Step 6: Run the Backend Server
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Backend URL:
+
+```
+http://127.0.0.1:8000
+```
+
+API Documentation (Swagger UI):
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# Frontend Setup
+
+Open a new terminal.
+
+Navigate to the project root:
+
+```bash
+cd agentic-decision-intelligence-platform
+```
+
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+Run the frontend server:
+
+```bash
+npm run dev
+```
+
+Frontend URL:
+
+```
+http://localhost:5173
+```
+
+---
+
+# Running the Complete Application
+
+### Terminal 1 – Backend
+
+```bash
+cd backend
+source .venv/bin/activate
+uvicorn app.main:app --reload
+```
+
+### Terminal 2 – Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+Open the following URLs in your browser:
+
+### Frontend
+
+```
+http://localhost:5173
+```
+
+### Backend
+
+```
+http://127.0.0.1:8000
+```
+
+### API Documentation
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# Troubleshooting
+
+### Backend dependencies not installed
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### Frontend dependencies missing
+
+```bash
+npm install
+```
+
+---
+
+### Port 8000 already in use
+
+macOS / Linux
+
+```bash
+lsof -i :8000
+kill -9 <PID>
+```
+
+---
+
+### Virtual Environment Activation
+
+macOS / Linux
+
+```bash
+source .venv/bin/activate
+```
+
+Windows
+
+```bash
+.venv\Scripts\activate
+```
+
