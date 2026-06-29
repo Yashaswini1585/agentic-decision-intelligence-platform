@@ -13,7 +13,8 @@ import {
   Sparkles,
   ShieldCheck,
   ChevronRight,
-  Database
+  Database,
+  Loader2
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 import Card, { CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
@@ -21,10 +22,64 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 
 const Evaluation = () => {
-  const { logout } = usePlatform();
+  const { logout, selectedFlow, selectedRole } = usePlatform();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [impactFilter, setImpactFilter] = useState('all');
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportMessage, setExportMessage] = useState(null);
+
+  const handleExportAudit = async () => {
+    if (!selectedFlow) {
+      alert("No active decision flow available for audit export.");
+      return;
+    }
+
+    setIsExporting(true);
+    setExportMessage(null);
+
+    try {
+      const payload = {
+        ...selectedFlow,
+        persona: selectedRole === 'customer_success' 
+          ? 'Customer Success Manager' 
+          : selectedRole === 'procurement' 
+            ? 'Procurement Officer' 
+            : 'Decision Supervisor'
+      };
+
+      const response = await fetch('http://localhost:8000/export-audit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Export failed with status ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `audit_summary_${selectedFlow.id || 'flow-101'}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      setExportMessage({ type: 'success', text: 'Audit summary PDF generated and downloaded successfully!' });
+      setTimeout(() => setExportMessage(null), 4000);
+    } catch (error) {
+      console.error('PDF export error:', error);
+      setExportMessage({ type: 'error', text: 'Failed to generate PDF. Make sure backend is running.' });
+      setTimeout(() => setExportMessage(null), 5000);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   // Mock dummy audit history representing decisions
   const historicalDecisions = [
@@ -103,11 +158,35 @@ const Evaluation = () => {
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Platform Evaluation Summary</h1>
           <p className="text-sm text-slate-500">Post-execution audit report measuring recommendation latency, model confidence, and ROI impact.</p>
         </div>
-        <Button variant="outline" className="flex items-center gap-2 bg-white border-slate-200">
-          <FileDown className="h-4 w-4 text-slate-500" />
-          <span>Export Audit Summary</span>
+        <Button 
+          onClick={handleExportAudit}
+          disabled={isExporting}
+          variant="outline" 
+          className="flex items-center gap-2 bg-white border-slate-200"
+        >
+          {isExporting ? (
+            <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
+          ) : (
+            <FileDown className="h-4 w-4 text-slate-500" />
+          )}
+          <span>{isExporting ? 'Generating PDF...' : 'Export Audit Summary'}</span>
         </Button>
       </div>
+
+      {exportMessage && (
+        <div className={`p-3.5 rounded-xl border text-xs flex items-center gap-2 shadow-xs transition-all duration-300 ${
+          exportMessage.type === 'success' 
+            ? 'bg-emerald-50/70 border-emerald-100 text-emerald-950 font-semibold' 
+            : 'bg-red-50/70 border-red-100 text-red-950 font-semibold'
+        }`}>
+          {exportMessage.type === 'success' ? (
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+          ) : (
+            <AlertCircle className="h-4 w-4 text-red-650 shrink-0" />
+          )}
+          <span>{exportMessage.text}</span>
+        </div>
+      )}
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

@@ -20,13 +20,16 @@ import Button from '../../components/ui/Button';
 
 const Results = () => {
   const navigate = useNavigate();
-  const { selectedFlow } = usePlatform();
+  const { selectedFlow, approveDecision, rejectDecision } = usePlatform();
   const [decisionState, setDecisionState] = useState('pending'); // 'pending', 'accepted', 'rejected'
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectForm, setShowRejectForm] = useState(false);
 
   const handleAccept = () => {
     setDecisionState('accepted');
+    if (selectedFlow) {
+      approveDecision(selectedFlow.id, 'Approved via Results review dashboard.');
+    }
   };
 
   const handleReject = () => {
@@ -36,6 +39,9 @@ const Results = () => {
     }
     setDecisionState('rejected');
     setShowRejectForm(false);
+    if (selectedFlow) {
+      rejectDecision(selectedFlow.id, rejectReason);
+    }
   };
 
   const handleReset = () => {

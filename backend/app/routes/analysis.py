@@ -1,8 +1,10 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from datetime import datetime
 import uuid
 import os
+import io
 import tempfile
 from pathlib import Path
 from app.database.connection import db, get_customer_info
@@ -10,6 +12,7 @@ from app.services.document_reader import DocumentReader
 from app.services.meeting_parser import MeetingParser
 from app.services.sentiment_analyzer import SentimentAnalyzer
 from app.agents.planner_agent import PlannerAgent
+from app.services.audit_exporter import AuditExporter
 
 router = APIRouter()
 
@@ -142,5 +145,25 @@ async def analyze_document(request: AnalyzeRequest):
             "contract_value": customer_info["contract_value"] if customer_info else "$2.4M ACV"
         },
         "recommendations": pipeline_result.get("recommendations", []),
-        "explanation": pipeline_result.get("explanations", {})
+        "explanation": pipeline_result.get("explanations", {}),
+        "meeting_notes": meeting_notes
     }
+
+@router.post("/export-audit")
+async def export_audit(flow_data: dict):
+    """
+    Endpoint to export a dynamic, multi-page PDF audit report based on flow data.
+    """
+    try:
+        pdf_bytes = AuditExporter.generate_pdf(flow_data)
+        flow_id = flow_data.get("id", "flow-101")
+        
+        return StreamingResponse(
+            io.BytesIO(pdf_bytes),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename=audit_summary_{flow_id}.pdf"
+            }
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate audit report PDF: {str(e)}")

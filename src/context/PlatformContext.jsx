@@ -342,22 +342,38 @@ export const PlatformProvider = ({ children }) => {
     });
   };
 
-  const approveDecision = (flowId) => {
+  const approveDecision = (flowId, feedback = '') => {
     setFlows(prevFlows => {
       return prevFlows.map(flow => {
         if (flow.id === flowId) {
-          return { ...flow, status: 'completed' };
+          return { 
+            ...flow, 
+            status: 'completed',
+            humanReview: {
+              decision: 'approved',
+              feedback: feedback || 'Decision approved by Customer Success Manager.',
+              overrideStatus: 'approved'
+            }
+          };
         }
         return flow;
       });
     });
   };
 
-  const rejectDecision = (flowId) => {
+  const rejectDecision = (flowId, feedback = '') => {
     setFlows(prevFlows => {
       return prevFlows.map(flow => {
         if (flow.id === flowId) {
-          return { ...flow, status: 'failed' };
+          return { 
+            ...flow, 
+            status: 'failed',
+            humanReview: {
+              decision: 'rejected',
+              feedback: feedback,
+              overrideStatus: 'overridden'
+            }
+          };
         }
         return flow;
       });
@@ -372,6 +388,8 @@ export const PlatformProvider = ({ children }) => {
             ...flow,
             status: 'pending_approval',
             progress: 100,
+            meetingNotes: result.meeting_notes,
+            customerSummary: result.customer_summary,
             recommendation: {
               action: result.recommendations[0]?.title || "Strategy realignment",
               savings: result.customer_summary?.contract_value || '$12,000 baseline',
@@ -381,9 +399,14 @@ export const PlatformProvider = ({ children }) => {
               alternatives: result.recommendations.map(r => ({
                 name: r.title,
                 cost: r.cost || 'Low Cost',
-                risk: 'Low-Medium',
-                score: '85%'
+                risk: r.impact || 'Low-Medium',
+                score: `${Math.round(r.confidence_score * 100)}%`
               }))
+            },
+            humanReview: {
+              decision: 'pending',
+              feedback: '',
+              overrideStatus: 'none'
             }
           };
         }
