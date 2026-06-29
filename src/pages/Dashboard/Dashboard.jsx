@@ -76,13 +76,29 @@ const Dashboard = () => {
     setAnalyzingFile(file.name);
 
     try {
-      // 1. Send request to FastAPI POST /analyze endpoint
+      // 1. Create FormData and upload the file to the backend
+      const formData = new FormData();
+      formData.append('file', file.rawFile);
+      
+      const uploadResponse = await fetch('http://localhost:8000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed with status ${uploadResponse.status}`);
+      }
+
+      const uploadResult = await uploadResponse.json();
+      const fileId = uploadResult.file_id;
+
+      // 2. Send request to FastAPI POST /analyze endpoint with the correct file_id
       const response = await fetch('http://localhost:8000/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ file_id: `doc_${Math.random().toString(36).substring(7)}` }),
+        body: JSON.stringify({ file_id: fileId }),
       });
 
       if (!response.ok) {
@@ -92,7 +108,7 @@ const Dashboard = () => {
       const result = await response.json();
       console.log('FastAPI response received:', result);
 
-      // 2. Inject response into PlatformContext state
+      // 3. Inject response into PlatformContext state
       injectAnalysisResult(result);
 
 

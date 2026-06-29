@@ -373,13 +373,14 @@ export const PlatformProvider = ({ children }) => {
             status: 'pending_approval',
             progress: 100,
             recommendation: {
-              action: result.recommendations[0]?.title || result.explanation,
+              action: result.recommendations[0]?.title || "Strategy realignment",
               savings: result.customer_summary?.contract_value || '$12,000 baseline',
               riskLevel: result.risk_level || 'Medium',
               confidence: `${Math.round(result.confidence_score * 100)}%`,
+              explanation: result.explanation,
               alternatives: result.recommendations.map(r => ({
                 name: r.title,
-                cost: r.cost,
+                cost: r.cost || 'Low Cost',
                 risk: 'Low-Medium',
                 score: '85%'
               }))

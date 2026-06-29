@@ -72,8 +72,27 @@ class PlannerAgent:
         )
 
         # 6. Explanation Agent
+        recs_list = recommendations.get("recommendations", [])
+        confidence_val = f"{int(recs_list[0].get('confidence_score', 0.94) * 100)}%" if recs_list else "92%"
+        
+        extracted_entities = {
+            "customer_name": customer_profile.get("name"),
+            "industry": customer_profile.get("industry"),
+            "contract_value": customer_profile.get("contract_value"),
+            "participants": meeting_notes.get("participants", []) if meeting_notes else []
+        }
+        identified_risks = {
+            "risk_level": business.get("analysis", {}).get("risk_level", "Medium"),
+            "meeting_risks": meeting_notes.get("risks", []) if meeting_notes else []
+        }
+        
         explanations = self.explanation_agent.generate(
-            recommendations["recommendations"]
+            meeting_summary=meeting_notes.get("summary", "No meeting summary.") if meeting_notes else "No meeting summary.",
+            extracted_entities=extracted_entities,
+            identified_risks=identified_risks,
+            recommendation=recs_list,
+            confidence=confidence_val,
+            retrieved_documents=knowledge.get("knowledge", [])
         )
 
         return {
@@ -82,5 +101,5 @@ class PlannerAgent:
             "memory_summary": memory,
             "business_analysis": business,
             "recommendations": recommendations["recommendations"],
-            "explanations": explanations["explanations"]
+            "explanations": explanations["explanation"]
         }

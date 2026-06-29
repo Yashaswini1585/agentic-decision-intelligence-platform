@@ -12,14 +12,26 @@ class ExplanationAgent:
     def __init__(self):
         self.service = ExplanationService()
 
-    def generate(self, recommendations):
+    def generate(
+        self,
+        meeting_summary,
+        extracted_entities,
+        identified_risks,
+        recommendation,
+        confidence,
+        retrieved_documents
+    ):
 
-        explanations = self.service.generate(
-            recommendations
+        explanation = self.service.generate(
+            meeting_summary=meeting_summary,
+            extracted_entities=extracted_entities,
+            identified_risks=identified_risks,
+            recommendation=recommendation,
+            confidence=confidence,
+            retrieved_documents=retrieved_documents
         )
 
         return {
             "status": "success",
-            "total_explanations": len(explanations),
-            "explanations": explanations
+            "explanation": explanation
         }

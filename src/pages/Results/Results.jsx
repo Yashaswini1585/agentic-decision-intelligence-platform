@@ -20,6 +20,7 @@ import Button from '../../components/ui/Button';
 
 const Results = () => {
   const navigate = useNavigate();
+  const { selectedFlow } = usePlatform();
   const [decisionState, setDecisionState] = useState('pending'); // 'pending', 'accepted', 'rejected'
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectForm, setShowRejectForm] = useState(false);
@@ -81,6 +82,144 @@ const Results = () => {
     ]
   };
 
+  const flowRec = selectedFlow?.recommendation;
+  const hasDynamicData = !!flowRec;
+
+  // Resolve recommendations dynamically
+  const recommendationsList = hasDynamicData
+    ? flowRec.alternatives.map((alt, idx) => ({
+        id: idx + 1,
+        title: alt.name,
+        description: idx === 0 
+          ? "Primary optimization pathway recommended by the solver nodes." 
+          : idx === 1 
+            ? "Secondary fallback option to hedge against high-risk variances." 
+            : "Tertiary mitigation option proposed for localized containment.",
+        impact: alt.risk === 'High' ? 'High Impact' : 'Medium Impact',
+        cost: alt.cost,
+        badgeColor: idx === 0 ? 'blue' : idx === 1 ? 'indigo' : 'sky'
+      }))
+    : customerData.recommendations;
+
+  // Resolve confidence score
+  let rawConfidence = hasDynamicData ? flowRec.confidence : `${customerData.confidenceScore}%`;
+  if (typeof rawConfidence === 'string') {
+    rawConfidence = rawConfidence.replace('%', '');
+  }
+  const confidenceScore = parseInt(rawConfidence) || 92;
+
+  // Resolve risk level
+  const riskLevel = hasDynamicData ? flowRec.riskLevel : customerData.riskLevel;
+
+  // Resolve explanation block HTML
+  const getExplanationContent = () => {
+    const rawExplanation = flowRec?.explanation || customerData.explanation;
+
+    let explanation = null;
+    if (typeof rawExplanation === 'object' && rawExplanation !== null) {
+      explanation = rawExplanation;
+    } else if (typeof rawExplanation === 'string') {
+      try {
+        explanation = JSON.parse(rawExplanation);
+      } catch (e) {
+        // Fallback string
+      }
+    }
+
+    if (explanation && typeof explanation === 'object') {
+      return (
+        <div className="space-y-5 text-slate-650 text-xs leading-relaxed font-sans">
+          {explanation.meeting_evidence && explanation.meeting_evidence.length > 0 && (
+            <div className="border-b border-slate-100 pb-3">
+              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+                Meeting Evidence
+              </h4>
+              <ul className="list-disc pl-5 space-y-1 text-slate-600">
+                {explanation.meeting_evidence.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {explanation.risks && explanation.risks.length > 0 && (
+            <div className="border-b border-slate-100 pb-3">
+              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                Detected Risks
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {explanation.risks.map((risk, idx) => (
+                  <Badge key={idx} variant="red" className="text-[10px] font-semibold">
+                    {risk}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {explanation.reasoning && (
+            <div className="border-b border-slate-100 pb-3">
+              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+                Reasoning
+              </h4>
+              <p className="text-slate-600 leading-relaxed pr-2">{explanation.reasoning}</p>
+            </div>
+          )}
+
+          {explanation.why_this_recommendation && (
+            <div className="border-b border-slate-100 pb-3">
+              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Why this Recommendation
+              </h4>
+              <p className="text-slate-600 leading-relaxed pr-2">{explanation.why_this_recommendation}</p>
+            </div>
+          )}
+
+          {explanation.business_impact && explanation.business_impact.length > 0 && (
+            <div className="border-b border-slate-100 pb-3">
+              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                Expected Business Impact
+              </h4>
+              <ul className="list-disc pl-5 space-y-1 text-slate-600">
+                {explanation.business_impact.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {explanation.sources && explanation.sources.length > 0 && (
+            <div>
+              <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
+                Evidence Sources
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {explanation.sources.map((source, idx) => (
+                  <span key={idx} className="px-2 py-0.5 text-[10px] bg-slate-100 border border-slate-200 text-slate-600 rounded font-semibold">
+                    {source}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-4.5 bg-slate-50 border border-slate-200/60 rounded-xl text-xs leading-relaxed text-slate-600 font-sans relative">
+        <Info className="absolute right-4 top-4 h-5 w-5 text-slate-300" />
+        <p className="pr-6">{rawExplanation}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-8">
       {/* Title Header */}
@@ -117,7 +256,7 @@ const Results = () => {
               <CardDescription>Optimized adjustments calculated to mitigate logistical risk events.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {customerData.recommendations.map((rec) => (
+              {recommendationsList.map((rec) => (
                 <div 
                   key={rec.id} 
                   className="p-4 bg-white border border-slate-200/80 rounded-xl shadow-xs hover:border-slate-300 transition-colors flex gap-4"
@@ -137,7 +276,7 @@ const Results = () => {
                         </span>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-500 leading-relaxed">{rec.description}</p>
+                    <p className="text-xs text-slate-550 leading-relaxed">{rec.description}</p>
                   </div>
                 </div>
               ))}
@@ -151,10 +290,7 @@ const Results = () => {
               <CardDescription>Auditable explanation detailing the model constraint variables checked.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="p-4.5 bg-slate-50 border border-slate-200/60 rounded-xl text-xs leading-relaxed text-slate-600 font-sans relative">
-                <Info className="absolute right-4 top-4 h-5 w-5 text-slate-300" />
-                <p className="pr-6">{customerData.explanation}</p>
-              </div>
+              {getExplanationContent()}
             </CardContent>
           </Card>
 
@@ -174,10 +310,10 @@ const Results = () => {
               <div className="h-28 w-28 relative flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90">
                   <circle cx="56" cy="56" r="48" className="stroke-slate-100 stroke-8 fill-none" />
-                  <circle cx="56" cy="56" r="48" className="stroke-blue-600 stroke-8 fill-none" strokeDasharray="300" strokeDashoffset={300 - (300 * customerData.confidenceScore) / 100} />
+                  <circle cx="56" cy="56" r="48" className="stroke-blue-600 stroke-8 fill-none" strokeDasharray="300" strokeDashoffset={300 - (300 * confidenceScore) / 100} />
                 </svg>
                 <div className="absolute text-center">
-                  <span className="text-3xl font-black text-slate-900 leading-none">{customerData.confidenceScore}%</span>
+                  <span className="text-3xl font-black text-slate-900 leading-none">{confidenceScore}%</span>
                   <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mt-1">Confidence</span>
                 </div>
               </div>
@@ -186,11 +322,11 @@ const Results = () => {
               <div className="w-full p-4 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between text-left">
                 <div>
                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Risk Level</span>
-                  <span className="text-sm font-bold text-slate-850 block mt-0.5">Medium Risk Profile</span>
+                  <span className="text-sm font-bold text-slate-850 block mt-0.5">{riskLevel === 'High' ? 'High Risk Profile' : riskLevel === 'Low' ? 'Low Risk Profile' : 'Medium Risk Profile'}</span>
                 </div>
-                <Badge variant="amber" className="flex items-center gap-1">
+                <Badge variant={riskLevel === 'High' ? 'red' : riskLevel === 'Low' ? 'emerald' : 'amber'} className="flex items-center gap-1">
                   <AlertTriangle className="h-3 w-3" />
-                  <span>{customerData.riskLevel}</span>
+                  <span>{riskLevel}</span>
                 </Badge>
               </div>
             </CardContent>
