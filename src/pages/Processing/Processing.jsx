@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Check, 
   Square, 
@@ -98,12 +98,25 @@ const INITIAL_STEPS = [
 
 const Processing = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const consoleEndRef = useRef(null);
 
   // Core state: Step checklist (unchecked, active, completed)
   const [steps, setSteps] = useState(INITIAL_STEPS.map(s => ({ ...s, status: 'unchecked' })));
   const [activeStepId, setActiveStepId] = useState(1);
   const [isSimulating, setIsSimulating] = useState(false);
+
+  // Auto-trigger simulation if routed from document upload
+  useEffect(() => {
+    if (location.state?.runSimulation) {
+      setIsSimulating(true);
+      setSteps(INITIAL_STEPS.map(s => ({ ...s, status: 'unchecked' })));
+      setActiveStepId(1);
+      setTerminalLogs(['[System] Pipeline initialized. All agent nodes idle.']);
+      
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
   const [terminalLogs, setTerminalLogs] = useState(['[System] Pipeline initialized. All agent nodes idle.']);
 
   // Handle auto-scroll terminal logs
@@ -117,34 +130,45 @@ const Processing = () => {
   useEffect(() => {
     let timer;
     if (isSimulating) {
-      // Find the first unchecked step
-      const nextStepIndex = steps.findIndex(s => s.status === 'unchecked');
-      
-      if (nextStepIndex !== -1) {
-        const step = steps[nextStepIndex];
+      const stepIndex = steps.findIndex(s => s.id === activeStepId);
+      if (stepIndex !== -1) {
+        const step = steps[stepIndex];
         
-        // Mark active
-        setSteps(prev => prev.map((s, idx) => 
-          idx === nextStepIndex ? { ...s, status: 'active' } : s
-        ));
-        setActiveStepId(step.id);
-        setTerminalLogs(prev => [...prev, `[System] Commencing step ${step.id}: ${step.name}...`]);
-
-        // Delay to simulate processing logs
-        timer = setTimeout(() => {
-          setSteps(prev => prev.map((s, idx) => 
-            idx === nextStepIndex ? { ...s, status: 'completed' } : s
+        if (step.status === 'unchecked') {
+          // 1. Commencing: mark the step as active
+          setSteps(prev => prev.map(s => 
+            s.id === activeStepId ? { ...s, status: 'active' } : s
           ));
-          setTerminalLogs(prev => [...prev, ...step.logs, `[System] Step ${step.id} completed.`]);
-        }, 1500);
-      } else {
-        // All steps completed
-        setIsSimulating(false);
-        setTerminalLogs(prev => [...prev, '[System] All steps completed successfully. Ready for review.']);
+          setTerminalLogs(prev => [...prev, `[System] Commencing step ${step.id}: ${step.name}...`]);
+        } else if (step.status === 'active') {
+          // 2. Active: wait 1.5 seconds, then mark completed and advance activeStepId
+          timer = setTimeout(() => {
+            setSteps(prev => prev.map(s => 
+              s.id === activeStepId ? { ...s, status: 'completed' } : s
+            ));
+            setTerminalLogs(prev => [...prev, ...step.logs, `[System] Step ${step.id} completed.`]);
+            
+            if (activeStepId < steps.length) {
+              setActiveStepId(prevId => prevId + 1);
+            } else {
+              setIsSimulating(false);
+              setTerminalLogs(prev => [...prev, '[System] All steps completed successfully. Ready for review.']);
+            }
+          }, 1500);
+        } else if (step.status === 'completed') {
+          // 3. Completed: if already completed, move onto the next step
+          if (activeStepId < steps.length) {
+            setActiveStepId(prevId => prevId + 1);
+          } else {
+            setIsSimulating(false);
+          }
+        }
       }
     }
-    return () => clearTimeout(timer);
-  }, [isSimulating, steps]);
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isSimulating, activeStepId, steps]);
 
   // Functions to manually mark steps complete/incomplete
   const toggleStepCompleted = (stepId) => {
