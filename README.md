@@ -21,28 +21,6 @@ The **Agentic Decision Intelligence Platform** is an AI-powered web application 
 
 ---
 
-## Tech Stack
-
-### Frontend
-- React.js
-- Vite
-- JavaScript
-- CSS
-
-### Backend
-- FastAPI
-- Python
-
-### Database
-- MongoDB
-
-### Development Tools
-- Git
-- GitHub
-- VS Code
-
----
-
 ## Project Structure
 
 ```
